@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "dependencies": {
     "@line/bot-sdk": "^9.5.3",
     "express": "^4.21.2"
