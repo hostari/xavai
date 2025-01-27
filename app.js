@@ -3,12 +3,12 @@ import express from 'express'
 
 // create LINE SDK config from env variables
 const config = {
-  channelSecret: process.env.CHANNEL_SECRET,
+  channelSecret: process.env.LINE_CHANNEL_SECRET,
 };
 
 // create LINE SDK client
 const client = new line.messagingApi.MessagingApiClient({
-  channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN
+  channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN
 });
 
 // create Express app
@@ -41,7 +41,6 @@ function handleEvent(event) {
   // create an echoing text message
   const echo = { type: 'text', text: event.message.text };
   console.log(echo);
-  console.log(event.replyToken);
 
   // use reply API
   return client.replyMessage({
