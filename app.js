@@ -32,9 +32,18 @@ app.post('/line/webhook', line.middleware(config), (req, res) => {
 });
 
 // event handler
-function handleEvent(event) {
+async function handleEvent(event) {
   if (event.type !== 'message' || event.message.type !== 'text') {
     // ignore non-text-message event
+    return Promise.resolve(null);
+  }
+
+  // Get bot info to check its ID
+  const botInfo = await client.getBotInfo();
+  const botId = `@${botInfo.userId}`;
+
+  // Only reply if message mentions the bot
+  if (!event.message.text.includes(botId)) {
     return Promise.resolve(null);
   }
 
