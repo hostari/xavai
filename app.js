@@ -38,12 +38,12 @@ async function handleEvent(event) {
     return Promise.resolve(null);
   }
 
-  // Get bot info to check its ID
+  // Get bot info to check its display name
   const botInfo = await client.getBotInfo();
-  const botId = `@${botInfo.userId}`;
+  const botName = `@${botInfo.displayName}`;
 
-  // Only reply if message mentions the bot
-  if (!event.message.text.includes(botId)) {
+  // Only reply if message mentions the bot by display name
+  if (!event.message.text.includes(botName)) {
     return Promise.resolve(null);
   }
 
