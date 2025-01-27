@@ -41,6 +41,8 @@ function handleEvent(event) {
   // create an echoing text message
   const echo = { type: 'text', text: event.message.text };
   console.log(echo);
+  console.log(process.env.CHANNEL_SECRET);
+  console.log(process.env.CHANNEL_ACCESS_TOKEN);
 
   // use reply API
   return client.replyMessage({
