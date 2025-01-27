@@ -15,6 +15,10 @@ const client = new line.messagingApi.MessagingApiClient({
 // about Express itself: https://expressjs.com/
 const app = express();
 
+app.get('/', (req, res) => {
+  res.send('hello friend.');
+});
+
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
 app.post('/callback', line.middleware(config), (req, res) => {
