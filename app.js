@@ -11,16 +11,14 @@ const client = new line.messagingApi.MessagingApiClient({
   channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN
 });
 
-// create Express app
-// about Express itself: https://expressjs.com/
 const app = express();
 
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.send('hello friend.');
 });
 
-app.get('/up', (req, res) => {
-  res.sendStatus(200);
+app.get('/up', (_req, res) => {
+  res.status(200).end();
 });
 
 // register a webhook handler with middleware
