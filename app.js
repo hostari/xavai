@@ -4,7 +4,7 @@ import axios from 'axios'
 import * as fs from 'fs'
 
 // Read the context file
-const chotikaiContext = fs.readFileSync('/app/data/chotikai.txt', 'utf8');
+const chotikaiContext = fs.readFileSync('/app/data/chotikai-48-chunk-summary.txt', 'utf8');
 
 async function callLMStudio(userMessage) {
   const response = await axios.post(`http://${process.env.LM_STUDIO_HOST}:1234/v1/chat/completions`, {
@@ -92,7 +92,9 @@ async function handleEvent(event) {
     messages.push(echo);
   } else {
     const userMessage = event.message.text.replace(botName, '').trim();
+    console.log('Calling LM Studio...');
     const response = await callLMStudio(userMessage);
+    console.log(`LM Studio Response: ${response}`);
     messages.push(buildResponseMessage(response));
   }
 
