@@ -61,6 +61,8 @@ app.post('/line/webhook', line.middleware(config), (req, res) => {
 
 // event handler
 async function handleEvent(event) {
+  console.log('Event source:', event.source);
+  
   if (event.type !== 'message' || event.message.type !== 'text') {
     // ignore non-text-message event
     return Promise.resolve(null);
