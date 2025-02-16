@@ -9,7 +9,7 @@ def count_tokens(text):
     enc = tiktoken.get_encoding("cl100k_base")  # GPT-4 tokenizer
     return len(enc.encode(text))
 
-async def call_lm_studio(context):
+def call_lm_studio(context):
     """Call LM Studio API to generate summary"""
     url = "http://localhost:1234/v1/chat/completions"
     headers = {'Content-Type': 'application/json'}
