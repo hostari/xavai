@@ -64,6 +64,10 @@ app.post('/line/webhook', line.middleware(config), (req, res) => {
 });
 
 // event handler
+function removeThinkTags(text) {
+  return text.replace(/<think>.*?<\/think>/gs, '').trim();
+}
+
 function buildResponseMessage(text) {
   return { type: 'text', text: text };
 }
@@ -95,7 +99,8 @@ async function handleEvent(event) {
     console.log('Calling LM Studio...');
     const response = await callLMStudio(userMessage);
     console.log(`LM Studio Response: ${response}`);
-    messages.push(buildResponseMessage(response));
+    const cleanedResponse = removeThinkTags(response);
+    messages.push(buildResponseMessage(cleanedResponse));
   }
 
   // use reply API
