@@ -132,5 +132,5 @@ def create_summaries_range(start=4, end=48):
 
 if __name__ == "__main__":
     input_file = "chotikai.txt"
-    # chunk_files = create_chunks(input_file)
+    chunk_files = create_chunks(input_file)
     summary_files = create_summaries(chunk_files)
