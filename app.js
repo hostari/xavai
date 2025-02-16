@@ -6,6 +6,7 @@ import crypto from 'crypto'
 
 // Read the context file
 const chotikaiContext = fs.readFileSync(`/app/data/${process.env.CONTEXT_FILE_NAME}`, 'utf8');
+const currentUTC = new Date().toISOString();
 
 async function callLMStudio(userMessage) {
   const response = await axios.post(`http://${process.env.LM_STUDIO_HOST}:1234/v1/chat/completions`, {
@@ -96,7 +97,6 @@ async function handleEvent(event) {
     const echo = buildResponseMessage(event.message.text);
     messages.push(echo);
   } else if (event.message.text === '/version') {
-    const currentUTC = new Date().toISOString();
     const hash = crypto.createHash('sha256').update(chotikaiContext).digest('hex').slice(0, 7);
     messages.push(buildResponseMessage(`Loaded chotikai.txt version ${hash} at ${currentUTC}`));
   } else {
