@@ -96,10 +96,17 @@ async function handleEvent(event) {
     messages.push(echo);
   } else {
     const userMessage = event.message.text.replace(botName, '').trim();
-    console.log('Calling LM Studio...');
+    if (process.env.LOG_LM_STUDIO === 'true' || process.env.LOG_LM_STUDIO === '1') {
+      console.log('Calling LM Studio...');
+    }
     const response = await callLMStudio(userMessage);
-    console.log(`LM Studio Response: ${response}`);
-    const cleanedResponse = removeThinkTags(response);
+    if (process.env.LOG_LM_STUDIO === 'true' || process.env.LOG_LM_STUDIO === '1') {
+      console.log(`LM Studio Response: ${response}`);
+    }
+    let cleanedResponse = response;
+    if (process.env.REMOVE_THINK_TAGS === 'true' || process.env.REMOVE_THINK_TAGS === '1') {
+      cleanedResponse = removeThinkTags(response);
+    }
     messages.push(buildResponseMessage(cleanedResponse));
   }
 
