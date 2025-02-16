@@ -4,7 +4,7 @@ import axios from 'axios'
 import * as fs from 'fs'
 
 // Read the context file
-const chotikaiContext = fs.readFileSync('/app/data/chotikai-48-chunk-summary.txt', 'utf8');
+const chotikaiContext = fs.readFileSync(`/app/data/${process.env.CONTEXT_FILE_NAME}`, 'utf8');
 
 async function callLMStudio(userMessage) {
   const response = await axios.post(`http://${process.env.LM_STUDIO_HOST}:1234/v1/chat/completions`, {
@@ -94,6 +94,11 @@ async function handleEvent(event) {
   if (process.env.BOT_ECHO === 'true' || process.env.BOT_ECHO === '1') {
     const echo = buildResponseMessage(event.message.text);
     messages.push(echo);
+  } else if (event.message.text === '/version') {
+    const currentUTC = new Date().toISOString();
+    const hash = crypto.createHash('sha256').update(chotikaiContext).digest('hex').slice(0, 7);
+    messages.push(`Loaded chotikai.txt version ${hash} at ${currentUTC}.`)
+  }
   } else {
     const userMessage = event.message.text.replace(botName, '').trim();
     if (process.env.LOG_LM_STUDIO === 'true' || process.env.LOG_LM_STUDIO === '1') {
