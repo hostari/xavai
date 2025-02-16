@@ -56,6 +56,10 @@ app.post('/line/webhook', line.middleware(config), (req, res) => {
 });
 
 // event handler
+function buildResponseMessage(text) {
+  return { type: 'text', text: text };
+}
+
 async function handleEvent(event) {
   console.log('Event source:', event.source);
   
@@ -76,10 +80,13 @@ async function handleEvent(event) {
   // Create a response text message
   let messages = []
   if (process.env.BOT_ECHO === 'true' || process.env.BOT_ECHO === '1') {
-    const echo = { type: 'text', text: event.message.text };
+    const echo = buildResponseMessage(event.message.text);
     console.log(echo);
+    messages.push(echo);
   } else {
-
+    const userMessage = event.message.text.replace(botName, '').trim();
+    const response = await callLMStudio(userMessage);
+    messages.push(buildResponseMessage(response));
   }
 
   // use reply API
