@@ -1,33 +1,30 @@
 import * as line from '@line/bot-sdk'
 import express from 'express'
-import fetch from 'node-fetch'
+import axios from 'axios'
 
 async function callLMStudio(userMessage) {
-  const response = await fetch(`http://${process.env.LM_STUDIO_HOST}:1234/v1/chat/completions`, {
-    method: 'POST',
+  const response = await axios.post(`http://${process.env.LM_STUDIO_HOST}:1234/v1/chat/completions`, {
+    model: "deepseek-r1-distill-qen-7b",
+    messages: [
+      {
+        role: "system",
+        content: "always answer in rhymes. today is thursday"
+      },
+      {
+        role: "user",
+        content: userMessage
+      }
+    ],
+    temperature: 0.7,
+    max_tokens: -1,
+    stream: false
+  }, {
     headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: "deepseek-r1-distill-qen-7b",
-      messages: [
-        {
-          role: "system",
-          content: "always answer in rhymes. today is thursday"
-        },
-        {
-          role: "user",
-          content: userMessage
-        }
-      ],
-      temperature: 0.7,
-      max_tokens: -1,
-      stream: false
-    })
+      'Content-Type': 'application/json'
+    }
   });
 
-  const data = await response.json();
-  return data.choices[0].message.content;
+  return response.data.choices[0].message.content;
 }
 
 // create LINE SDK config from env variables
