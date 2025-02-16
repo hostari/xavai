@@ -34,8 +34,8 @@ def call_lm_studio(context):
     response = requests.post(url, headers=headers, json=payload)
     return response.json()['choices'][0]['message']['content']
 
-def chunk_text(input_file, tokens_per_chunk=8000):
-    """Split text file into chunks of approximately equal token counts"""
+def create_chunks(input_file, tokens_per_chunk=8000):
+    """Split text file into chunks of approximately equal token counts and save them"""
     
     # Read the entire file
     with open(input_file, 'r', encoding='utf-8') as f:
@@ -53,6 +53,7 @@ def chunk_text(input_file, tokens_per_chunk=8000):
     chunks = []
     current_chunk = []
     current_tokens = 0
+    chunk_files = []
     
     for para in paragraphs:
         para_tokens = count_tokens(para)
@@ -77,15 +78,32 @@ def chunk_text(input_file, tokens_per_chunk=8000):
         output_file = f"{base_name}_chunk_{i}.txt"
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write(chunk)
+        chunk_files.append(output_file)
+        print(f"Created {output_file} with {count_tokens(chunk)} tokens")
+    
+    return chunk_files
+
+def create_summaries(chunk_files):
+    """Generate and save summaries for each chunk file"""
+    summary_files = []
+    for chunk_file in chunk_files:
+        with open(chunk_file, 'r', encoding='utf-8') as f:
+            chunk_content = f.read()
         
-        # Generate and save summary
-        summary = call_lm_studio(chunk)
-        summary_file = f"{base_name}_chunk_{i}_summary.txt"
+        # Generate summary
+        summary = call_lm_studio(chunk_content)
+        
+        # Save summary
+        summary_file = f"{os.path.splitext(chunk_file)[0]}_summary.txt"
         with open(summary_file, 'w', encoding='utf-8') as f:
             f.write(summary)
-            
-        print(f"Created {output_file} with {count_tokens(chunk)} tokens")
+        
+        summary_files.append(summary_file)
         print(f"Created summary file {summary_file}")
+    
+    return summary_files
 
 if __name__ == "__main__":
-    chunk_text("chotikai.txt")
+    input_file = "chotikai.txt"
+    chunk_files = create_chunks(input_file)
+    summary_files = create_summaries(chunk_files)
