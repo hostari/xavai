@@ -14,7 +14,7 @@ async function callLMStudio(userMessage) {
     messages: [
       {
         role: "system",
-        content: `I have the following context, which is a conversation between Charlotte and Xavi. The message directly below 'Charlotte' or 'Charlotte replied to Xavi' is a message from Charlotte. The message below 'Xavi' or 'Xavi replied to Charlotte' is a message from Xavi: <context>${chotikaiContext}</context>.`
+        content: `I have the following context, which consists of summaries of conversations between Charlotte and Xavi. <context>${chotikaiContext}</context>.`
       },
       {
         role: "user",
