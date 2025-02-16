@@ -108,6 +108,7 @@ def create_summaries_range(start=4, end=48):
     summary_files = []
     for i in range(start, end + 1):
         chunk_file = f"chotikai_chunk_{i}.txt"
+        print(chunk_file)
         
         # Skip if file doesn't exist
         if not os.path.exists(chunk_file):
@@ -132,5 +133,5 @@ def create_summaries_range(start=4, end=48):
 
 if __name__ == "__main__":
     input_file = "chotikai.txt"
-    chunk_files = create_chunks(input_file)
-    summary_files = create_summaries(chunk_files)
+    # chunk_files = create_chunks(input_file)
+    summary_files = create_summaries_range(49,50)
