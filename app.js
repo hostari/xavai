@@ -2,6 +2,7 @@ import * as line from '@line/bot-sdk'
 import express from 'express'
 import axios from 'axios'
 import * as fs from 'fs'
+import crypto from 'crypto'
 
 // Read the context file
 const chotikaiContext = fs.readFileSync(`/app/data/${process.env.CONTEXT_FILE_NAME}`, 'utf8');
@@ -97,8 +98,7 @@ async function handleEvent(event) {
   } else if (event.message.text === '/version') {
     const currentUTC = new Date().toISOString();
     const hash = crypto.createHash('sha256').update(chotikaiContext).digest('hex').slice(0, 7);
-    messages.push(`Loaded chotikai.txt version ${hash} at ${currentUTC}.`)
-  }
+    messages.push(buildResponseMessage(`Loaded chotikai.txt version ${hash} at ${currentUTC}`));
   } else {
     const userMessage = event.message.text.replace(botName, '').trim();
     if (process.env.LOG_LM_STUDIO === 'true' || process.env.LOG_LM_STUDIO === '1') {
