@@ -103,6 +103,33 @@ def create_summaries(chunk_files):
     
     return summary_files
 
+def create_summaries_range(start=4, end=48):
+    """Generate and save summaries for chunk files in a specific range"""
+    summary_files = []
+    for i in range(start, end + 1):
+        chunk_file = f"chotikai_chunk_{i}.txt"
+        
+        # Skip if file doesn't exist
+        if not os.path.exists(chunk_file):
+            print(f"Warning: {chunk_file} not found, skipping...")
+            continue
+            
+        with open(chunk_file, 'r', encoding='utf-8') as f:
+            chunk_content = f.read()
+        
+        # Generate summary
+        summary = call_lm_studio(chunk_content)
+        
+        # Save summary
+        summary_file = f"chotikai_chunk_{i}_summary.txt"
+        with open(summary_file, 'w', encoding='utf-8') as f:
+            f.write(summary)
+        
+        summary_files.append(summary_file)
+        print(f"Created summary file {summary_file}")
+    
+    return summary_files
+
 if __name__ == "__main__":
     input_file = "chotikai.txt"
     # chunk_files = create_chunks(input_file)
