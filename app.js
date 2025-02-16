@@ -7,8 +7,12 @@ async function callLMStudio(userMessage) {
     model: "deepseek-r1-distill-qen-7b",
     messages: [
       {
+        role: "system",
+        content: `I have the following context, which is a conversation between Charlotte and Xavi. The message directly below 'Charlotte' or 'Charlotte replied to Xavi' is a message from Charlotte. The message below 'Xavi' or 'Xavi replied to Charlotte' is a message from Xavi: <context>${chotikaiContext}</context>.`
+      },
+      {
         role: "user",
-        content: `Context information is attached in chotikai.txt. This is a conversation between Charlotte and Xavi. The message directly below 'Charlotte' or 'Charlotte replied to Xavi' is a message from Charlotte. The message below 'Xavi' or 'Xavi replied to Charlotte' is a message from Xavi. Given the context information above, I want you to think step by step to answer the query in a crisp manner, in case you don't know the answer say 'I don't know!'. Query: ${userMessage}. Answer: `
+        content: `Using the context information that you have, I want you to think step by step to answer the query in a crisp manner, in case you don't know the answer say 'I don't know!'. Query: ${userMessage}. Answer: `
       }
     ],
     temperature: 0.7,
@@ -81,7 +85,6 @@ async function handleEvent(event) {
   let messages = []
   if (process.env.BOT_ECHO === 'true' || process.env.BOT_ECHO === '1') {
     const echo = buildResponseMessage(event.message.text);
-    console.log(echo);
     messages.push(echo);
   } else {
     const userMessage = event.message.text.replace(botName, '').trim();
