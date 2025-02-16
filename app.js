@@ -1,6 +1,10 @@
 import * as line from '@line/bot-sdk'
 import express from 'express'
 import axios from 'axios'
+import * as fs from 'fs'
+
+// Read the context file
+const chotikaiContext = fs.readFileSync('/tmp/xavi-context/chotikai.txt', 'utf8');
 
 async function callLMStudio(userMessage) {
   const response = await axios.post(`http://${process.env.LM_STUDIO_HOST}:1234/v1/chat/completions`, {
