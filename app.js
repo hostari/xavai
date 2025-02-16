@@ -73,17 +73,18 @@ async function handleEvent(event) {
     return Promise.resolve(null);
   }
 
-  // create an echoing text message
+  // Create a response text message
+  let messages = []
   if (process.env.BOT_ECHO === 'true' || process.env.BOT_ECHO === '1') {
     const echo = { type: 'text', text: event.message.text };
     console.log(echo);
+  } else {
+
   }
 
   // use reply API
-  return client.replyMessage({
-    replyToken: event.replyToken,
-    messages: [echo],
-  });
+  const replyToken = event.replyToken
+  return client.replyMessage({replyToken, messages});
 }
 
 // listen on port
