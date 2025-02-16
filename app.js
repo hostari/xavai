@@ -9,28 +9,33 @@ const chotikaiContext = fs.readFileSync(`/app/data/${process.env.CONTEXT_FILE_NA
 const currentUTC = new Date().toISOString();
 
 async function callLMStudio(userMessage) {
-  const response = await axios.post(`http://${process.env.LM_STUDIO_HOST}:1234/v1/chat/completions`, {
-    model: "deepseek-r1-distill-qen-7b",
-    messages: [
-      {
-        role: "system",
-        content: `I have the following context, which consists of summaries of conversations between Charlotte and Xavi. <context>${chotikaiContext}</context>.`
-      },
-      {
-        role: "user",
-        content: `Using the context information that you have, I want you to think step by step to answer the query in a crisp manner, in case you don't know the answer say 'I don't know!'. Query: ${userMessage}. Answer: `
+  try {
+    const response = await axios.post(`http://${process.env.LM_STUDIO_HOST}:1234/v1/chat/completions`, {
+      model: "deepseek-r1-distill-qen-7b",
+      messages: [
+        {
+          role: "system",
+          content: `I have the following context, which consists of summaries of conversations between Charlotte and Xavi. <context>${chotikaiContext}</context>.`
+        },
+        {
+          role: "user",
+          content: `Using the context information that you have, I want you to think step by step to answer the query in a crisp manner, in case you don't know the answer say 'I don't know!'. Query: ${userMessage}. Answer: `
+        }
+      ],
+      temperature: 0.7,
+      max_tokens: -1,
+      stream: false
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
       }
-    ],
-    temperature: 0.7,
-    max_tokens: -1,
-    stream: false
-  }, {
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
+    });
 
-  return response.data.choices[0].message.content;
+    return response.data.choices[0].message.content;
+  } catch (error) {
+    console.error('Error in callLMStudio:', error);
+    return "Oops, an error occurred. Try prompting me again.";
+  }
 }
 
 // create LINE SDK config from env variables
