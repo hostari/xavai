@@ -74,7 +74,7 @@ async function handleEvent(event) {
   }
 
   // create an echoing text message
-  if (process.env.BOT_ECHO == 1) {
+  if (process.env.BOT_ECHO === 'true' || process.env.BOT_ECHO === '1') {
     const echo = { type: 'text', text: event.message.text };
     console.log(echo);
   }
