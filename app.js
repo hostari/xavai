@@ -96,7 +96,7 @@ async function handleEvent(event) {
   if (process.env.BOT_ECHO === 'true' || process.env.BOT_ECHO === '1') {
     const echo = buildResponseMessage(event.message.text);
     messages.push(echo);
-  } else if (event.message.text === '/version') {
+  } else if (event.message.text.includes('/version')) {
     const hash = crypto.createHash('sha256').update(chotikaiContext).digest('hex').slice(0, 7);
     messages.push(buildResponseMessage(`Loaded chotikai.txt version ${hash} at ${currentUTC}`));
   } else {
