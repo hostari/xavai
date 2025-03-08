@@ -248,9 +248,11 @@ async function handleEvent(event) {
   } else if (event.message.text.includes('/togglecontext')) {
     useContext = !useContext;
     if (useContext) {
-      messages.push(buildResponseMessage(`I am now using the context you have provided me. Ask me any question related to the context.`));
+      const randomContextMessage = contextMessages[Math.floor(Math.random() * contextMessages.length)];
+      messages.push(buildResponseMessage(randomContextMessage));
     } else {
-      messages.push(buildResponseMessage(`OK, I will not use any context info from now on. You can ask me any prompt now.`));
+      const randomNoContextMessage = noContextMessages[Math.floor(Math.random() * noContextMessages.length)];
+      messages.push(buildResponseMessage(randomNoContextMessage));
     }
   } else {
     const userMessage = event.message.text.replace(botName, '').trim();
