@@ -79,6 +79,9 @@ async function handleEvent(event) {
   const botName = `@${process.env.BOT_NAME}`;
 
   // Only reply if message mentions the bot by display name
+console.log(`botName is: ${botName}`);
+console.log(`message is: ${event.message.text}`);
+console.log(`message does not include botName: ${!event.message.text.includes(botName)}`);
   if (!event.message.text.includes(botName)) {
     return Promise.resolve(null);
   }
