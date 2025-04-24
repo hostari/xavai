@@ -76,8 +76,7 @@ async function handleEvent(event) {
   }
 
   // Get bot info to check its display name
-  const botInfo = await client.getBotInfo();
-  const botName = `@${botInfo.displayName}`;
+  const botName = `@${process.env.BOT_NAME}`;
 
   // Only reply if message mentions the bot by display name
   if (!event.message.text.includes(botName)) {
