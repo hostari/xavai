@@ -6,76 +6,10 @@
     <title>AutoQ</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script src="https://unpkg.com/@hotwired/stimulus/dist/stimulus.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-</head>
-<body class="bg-gray-100 min-h-screen p-8">
-    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
-        <h1 class="text-3xl font-bold mb-2 text-center">AutoQ</h1>
-        <h2 class="text-xl mb-8 text-center text-gray-600">Katsu Midori, Central World</h2>
-        
-        <div data-controller="queue-selection">
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-6 mb-8">
-                <div class="relative" data-queue-selection-target="imageContainer">
-                    <img src="/100.png" class="w-full rounded-lg cursor-pointer" data-action="click->queue-selection#selectImage" data-queue-price-id="1" data-wait-time="5">
-                    <div class="absolute inset-0 border-4 border-blue-500 rounded-lg" data-queue-selection-target="border"></div>
-                    <div class="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 rounded">100</div>
-                </div>
-                <div class="relative" data-queue-selection-target="imageContainer">
-                    <img src="/120.png" class="w-full rounded-lg cursor-pointer" data-action="click->queue-selection#selectImage" data-queue-price-id="2" data-wait-time="10">
-                    <div class="hidden absolute inset-0 border-4 border-blue-500 rounded-lg" data-queue-selection-target="border"></div>
-                    <div class="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 rounded">120</div>
-                </div>
-                <div class="relative" data-queue-selection-target="imageContainer">
-                    <img src="/140.png" class="w-full rounded-lg cursor-pointer" data-action="click->queue-selection#selectImage" data-queue-price-id="3" data-wait-time="15">
-                    <div class="hidden absolute inset-0 border-4 border-blue-500 rounded-lg" data-queue-selection-target="border"></div>
-                    <div class="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 rounded">140</div>
-                </div>
-                <div class="relative" data-queue-selection-target="imageContainer">
-                    <img src="/150.png" class="w-full rounded-lg cursor-pointer" data-action="click->queue-selection#selectImage" data-queue-price-id="4" data-wait-time="20">
-                    <div class="hidden absolute inset-0 border-4 border-blue-500 rounded-lg" data-queue-selection-target="border"></div>
-                    <div class="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 rounded">150</div>
-                </div>
-                <div class="relative" data-queue-selection-target="imageContainer">
-                    <img src="/160.png" class="w-full rounded-lg cursor-pointer" data-action="click->queue-selection#selectImage" data-queue-price-id="5" data-wait-time="25">
-                    <div class="hidden absolute inset-0 border-4 border-blue-500 rounded-lg" data-queue-selection-target="border"></div>
-                    <div class="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 rounded">160</div>
-                </div>
-                <div class="relative" data-queue-selection-target="imageContainer">
-                    <img src="/180.png" class="w-full rounded-lg cursor-pointer" data-action="click->queue-selection#selectImage" data-queue-price-id="6" data-wait-time="30">
-                    <div class="hidden absolute inset-0 border-4 border-blue-500 rounded-lg" data-queue-selection-target="border"></div>
-                    <div class="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 rounded">180</div>
-                </div>
-            </div>
-
-            <div class="mb-6">
-                <p class="text-lg font-semibold mb-2" data-queue-selection-target="waitTimeMessage">Select an option to see wait time</p>
-            </div>
-
-            <div class="mb-6">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="arrival-time">
-                    Arrival Time
-                </label>
-                <input type="text" id="arrival-time" 
-                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                       data-queue-selection-target="arrivalTime">
-            </div>
-
-            <div class="w-full">
-                <button data-action="click->queue-selection#submitQueue"
-                        class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Queue
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        (() => {
-            const application = Stimulus.Application.start()
-
-            application.register("queue-selection", class extends Stimulus.Controller {
+    <script type="module">
+import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js";
+    window.Stimulus = Application.start();
+            Stimulus.register("queue-selection", class extends Stimulus.Controller {
                 static targets = ["imageContainer", "border", "waitTimeMessage", "arrivalTime"]
                 
                 connect() {
@@ -162,7 +96,69 @@
                     }
                 }
             })
-        })()
     </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
+        <h1 class="text-3xl font-bold mb-2 text-center">AutoQ</h1>
+        <h2 class="text-xl mb-8 text-center text-gray-600">Katsu Midori, Central World</h2>
+        
+        <div data-controller="queue-selection">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-6 mb-8">
+                <div class="relative" data-queue-selection-target="imageContainer">
+                    <img src="/100.png" class="w-full rounded-lg cursor-pointer" data-action="click->queue-selection#selectImage" data-queue-price-id="1" data-wait-time="5">
+                    <div class="absolute inset-0 border-4 border-blue-500 rounded-lg" data-queue-selection-target="border"></div>
+                    <div class="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 rounded">100</div>
+                </div>
+                <div class="relative" data-queue-selection-target="imageContainer">
+                    <img src="/120.png" class="w-full rounded-lg cursor-pointer" data-action="click->queue-selection#selectImage" data-queue-price-id="2" data-wait-time="10">
+                    <div class="hidden absolute inset-0 border-4 border-blue-500 rounded-lg" data-queue-selection-target="border"></div>
+                    <div class="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 rounded">120</div>
+                </div>
+                <div class="relative" data-queue-selection-target="imageContainer">
+                    <img src="/140.png" class="w-full rounded-lg cursor-pointer" data-action="click->queue-selection#selectImage" data-queue-price-id="3" data-wait-time="15">
+                    <div class="hidden absolute inset-0 border-4 border-blue-500 rounded-lg" data-queue-selection-target="border"></div>
+                    <div class="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 rounded">140</div>
+                </div>
+                <div class="relative" data-queue-selection-target="imageContainer">
+                    <img src="/150.png" class="w-full rounded-lg cursor-pointer" data-action="click->queue-selection#selectImage" data-queue-price-id="4" data-wait-time="20">
+                    <div class="hidden absolute inset-0 border-4 border-blue-500 rounded-lg" data-queue-selection-target="border"></div>
+                    <div class="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 rounded">150</div>
+                </div>
+                <div class="relative" data-queue-selection-target="imageContainer">
+                    <img src="/160.png" class="w-full rounded-lg cursor-pointer" data-action="click->queue-selection#selectImage" data-queue-price-id="5" data-wait-time="25">
+                    <div class="hidden absolute inset-0 border-4 border-blue-500 rounded-lg" data-queue-selection-target="border"></div>
+                    <div class="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 rounded">160</div>
+                </div>
+                <div class="relative" data-queue-selection-target="imageContainer">
+                    <img src="/180.png" class="w-full rounded-lg cursor-pointer" data-action="click->queue-selection#selectImage" data-queue-price-id="6" data-wait-time="30">
+                    <div class="hidden absolute inset-0 border-4 border-blue-500 rounded-lg" data-queue-selection-target="border"></div>
+                    <div class="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 rounded">180</div>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <p class="text-lg font-semibold mb-2" data-queue-selection-target="waitTimeMessage">Select an option to see wait time</p>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="arrival-time">
+                    Arrival Time
+                </label>
+                <input type="text" id="arrival-time" 
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                       data-queue-selection-target="arrivalTime">
+            </div>
+
+            <div class="w-full">
+                <button data-action="click->queue-selection#submitQueue"
+                        class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Queue
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
