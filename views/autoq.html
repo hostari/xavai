@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto Queue</title>
+    <title>AutoQ</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://unpkg.com/@hotwired/stimulus/dist/stimulus.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body class="bg-gray-100 min-h-screen p-8">
     <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
-        <h1 class="text-3xl font-bold mb-8 text-center">Queue Selection</h1>
+        <h1 class="text-3xl font-bold mb-2 text-center">AutoQ</h1>
+        <h2 class="text-xl mb-8 text-center text-gray-600">Katsu Midori, Central World</h2>
         
         <div data-controller="queue-selection">
             <div class="grid grid-cols-2 md:grid-cols-3 gap-6 mb-8">
                 <div class="relative" data-queue-selection-target="imageContainer">
                     <img src="/100.png" class="w-full rounded-lg cursor-pointer" data-action="click->queue-selection#selectImage" data-queue-price-id="1" data-wait-time="5">
-                    <div class="hidden absolute inset-0 border-4 border-blue-500 rounded-lg" data-queue-selection-target="border"></div>
+                    <div class="absolute inset-0 border-4 border-blue-500 rounded-lg" data-queue-selection-target="border"></div>
                     <div class="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 rounded">100</div>
                 </div>
                 <div class="relative" data-queue-selection-target="imageContainer">
@@ -60,9 +62,9 @@
                        data-queue-selection-target="arrivalTime">
             </div>
 
-            <div class="flex justify-center">
+            <div class="w-full">
                 <button data-action="click->queue-selection#submitQueue"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">
                     Queue
                 </button>
             </div>
@@ -77,12 +79,31 @@
                 static targets = ["imageContainer", "border", "waitTimeMessage", "arrivalTime"]
                 
                 connect() {
+                    // Set default arrival time to 10 AM
+                    const now = moment().tz("Asia/Bangkok");
+                    let defaultDate;
+                    
+                    if (now.hour() < 10) {
+                        defaultDate = now.hour(10).minute(0);
+                    } else if (now.hour() >= 22) {
+                        defaultDate = now.add(1, 'day').hour(10).minute(0);
+                    } else {
+                        defaultDate = now.hour(10).minute(0);
+                    }
+
                     flatpickr(this.arrivalTimeTarget, {
                         enableTime: true,
                         dateFormat: "Y-m-d H:i",
-                        minDate: "today"
+                        minDate: "today",
+                        defaultDate: defaultDate.toDate(),
+                        time_24hr: true
                     });
-                    this.selectedQueuePriceId = null;
+
+                    // Select default option (100.png)
+                    const defaultImage = this.element.querySelector('img[data-queue-price-id="1"]');
+                    if (defaultImage) {
+                        this.selectImage({ target: defaultImage });
+                    }
                 }
 
                 selectImage(event) {
@@ -96,9 +117,13 @@
                     // Update selected queue price ID
                     this.selectedQueuePriceId = event.target.dataset.queuePriceId;
                     
-                    // Update wait time message
-                    const waitTime = event.target.dataset.waitTime;
-                    this.waitTimeMessageTarget.textContent = `Estimated wait time: ${waitTime} minutes`;
+                    // Get arrival time
+                    const arrivalTime = moment(this.arrivalTimeTarget.value);
+                    const waitTime = parseInt(event.target.dataset.waitTime);
+                    const endTime = moment(arrivalTime).add(waitTime, 'minutes');
+                    
+                    // Update message
+                    this.waitTimeMessageTarget.textContent = `1 queue being called between ${arrivalTime.format('HH:mm')} - ${endTime.format('HH:mm')}`;
                 }
 
                 async submitQueue() {
