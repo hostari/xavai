@@ -7,10 +7,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script type="module">
-import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js";
-    window.Stimulus = Application.start();
-            Stimulus.register("queue-selection", class extends Stimulus.Controller {
-                static targets = ["imageContainer", "border", "waitTimeMessage", "arrivalTime"]
+	import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js";
+	window.Stimulus = Application.start();
+	Stimulus.register("queue-selection", class extends Controller {
+		static targets = ["imageContainer", "border", "waitTimeMessage", "arrivalTime"]
                 
                 connect() {
                     const now = moment().tz("Asia/Bangkok");
@@ -104,7 +104,6 @@ import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/di
     <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
         <h1 class="text-3xl font-bold mb-2 text-center">AutoQ</h1>
         <h2 class="text-xl mb-8 text-center text-gray-600">Katsu Midori, Central World</h2>
-        
         <div data-controller="queue-selection">
             <div class="grid grid-cols-2 md:grid-cols-3 gap-6 mb-8">
                 <div class="relative" data-queue-selection-target="imageContainer">
@@ -147,7 +146,7 @@ import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/di
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="arrival-time">
                     Arrival Time
                 </label>
-                <input type="text" id="arrival-time" 
+                <input type="text" id="arrival-time"
                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                        data-queue-selection-target="arrivalTime">
             </div>
