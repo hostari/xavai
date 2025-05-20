@@ -79,16 +79,25 @@
                 static targets = ["imageContainer", "border", "waitTimeMessage", "arrivalTime"]
                 
                 connect() {
-                    // Set default arrival time to 10 AM
                     const now = moment().tz("Asia/Bangkok");
                     let defaultDate;
                     
-                    if (now.hour() < 10) {
-                        defaultDate = now.hour(10).minute(0);
-                    } else if (now.hour() >= 22) {
-                        defaultDate = now.add(1, 'day').hour(10).minute(0);
+                    if (now.hour() < 10 || now.hour() >= 22) {
+                        // If current time is between 22:00-09:59, set to next day 10:00
+                        defaultDate = now.clone().startOf('day').hour(10).minute(0);
+                        if (now.hour() < 10) {
+                            defaultDate = defaultDate.startOf('day');
+                        } else {
+                            defaultDate = defaultDate.add(1, 'day');
+                        }
                     } else {
-                        defaultDate = now.hour(10).minute(0);
+                        // If current time is between 10:00-20:00, round to next 5 minutes
+                        defaultDate = now.clone();
+                        const minutes = Math.ceil(defaultDate.minutes() / 5) * 5;
+                        defaultDate.minutes(minutes);
+                        if (minutes === 60) {
+                            defaultDate.add(1, 'hour').minutes(0);
+                        }
                     }
 
                     flatpickr(this.arrivalTimeTarget, {
@@ -117,12 +126,12 @@
                     // Update selected queue price ID
                     this.selectedQueuePriceId = event.target.dataset.queuePriceId;
                     
-                    // Get arrival time
+                    // Get arrival time and calculate wait time based on selection
                     const arrivalTime = moment(this.arrivalTimeTarget.value);
                     const waitTime = parseInt(event.target.dataset.waitTime);
-                    const endTime = moment(arrivalTime).add(waitTime, 'minutes');
+                    const endTime = arrivalTime.clone().add(waitTime, 'minutes');
                     
-                    // Update message
+                    // Update message with proper formatting
                     this.waitTimeMessageTarget.textContent = `1 queue being called between ${arrivalTime.format('HH:mm')} - ${endTime.format('HH:mm')}`;
                 }
 
