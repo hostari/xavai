@@ -3,6 +3,7 @@ import express from 'express'
 import axios from 'axios'
 import * as fs from 'fs'
 import crypto from 'crypto'
+import path from 'path'
 
 async function callLMStudio(userMessage) {
   try {
@@ -37,6 +38,8 @@ const client = new line.messagingApi.MessagingApiClient({
 });
 
 const app = express();
+app.use(express.static('public'));
+app.use(express.json());
 
 app.get('/', (_req, res) => {
   res.send('hello friend.');
@@ -44,6 +47,15 @@ app.get('/', (_req, res) => {
 
 app.get('/up', (_req, res) => {
   res.status(200).end();
+});
+
+app.get('/autoq', (_req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'autoq.html'));
+});
+
+app.post('/katsu-midori-thailand-centralworld/queue-request', (req, res) => {
+  console.log('Queue Request:', req.body);
+  res.json({ status: 'success', data: req.body });
 });
 
 // register a webhook handler with middleware
