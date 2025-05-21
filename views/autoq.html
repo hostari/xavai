@@ -11,6 +11,60 @@
     <script type="module">
 	import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js";
 	window.Stimulus = Application.start();
+
+        Stimulus.register("language", class extends Controller {
+            static targets = ["selector"]
+            static values = {
+                currentLang: String
+            }
+
+            connect() {
+                this.currentLangValue = 'en'
+                this.updateTranslations()
+            }
+
+            toggle() {
+                this.currentLangValue = this.currentLangValue === 'en' ? 'th' : 'en'
+                this.updateTranslations()
+            }
+
+            updateTranslations() {
+                const translations = {
+                    en: {
+                        queuesBetween: "queues being called between",
+                        queue: "Queue",
+                        arrivalTime: "Arrival Time"
+                    },
+                    th: {
+                        queuesBetween: "[TH] queues being called between",
+                        queue: "[TH] Queue",
+                        arrivalTime: "[TH] Arrival Time"
+                    }
+                }
+
+                const lang = translations[this.currentLangValue]
+                
+                // Update all elements with data-translate attribute
+                document.querySelectorAll('[data-translate]').forEach(el => {
+                    const key = el.dataset.translate
+                    if (lang[key]) {
+                        if (el.tagName === 'INPUT') {
+                            el.placeholder = lang[key]
+                        } else {
+                            el.textContent = lang[key]
+                        }
+                    }
+                })
+
+                // Update the queue message format
+                const queueController = this.element.querySelector('[data-controller="queue-selection"]').__stimulusController
+                if (queueController) {
+                    queueController.updateWaitTimeMessage(
+                        queueController.element.querySelector('img[data-queue-selection-target="border"]:not(.hidden)')
+                    )
+                }
+            }
+        })
 	Stimulus.register("queue-selection", class extends Controller {
 		static targets = ["imageContainer", "border", "waitTimeMessage", "arrivalTime"]
                 
@@ -96,7 +150,11 @@
                     const images = Array.from(this.element.querySelectorAll('img'));
                     const queueCount = images.indexOf(imageElement) + 1; // +1 because index starts at 0
                     
-                    this.waitTimeMessageTarget.textContent = `${queueCount} ${queueCount === 1 ? 'queue' : 'queues'} being called between\n${arrivalTime.toFormat('HH:mm')} - ${endTime.toFormat('HH:mm')}`;
+                    const queueWord = queueCount === 1 ? 'queue' : 'queues'
+                    const betweenText = document.querySelector('[data-controller="language"]').__stimulusController.currentLangValue === 'en' 
+                        ? 'queues being called between'
+                        : '[TH] queues being called between'
+                    this.waitTimeMessageTarget.textContent = `${queueCount} ${queueWord} ${betweenText}\n${arrivalTime.toFormat('HH:mm')} - ${endTime.toFormat('HH:mm')}`;
                 }
 
                 async submitQueue() {
@@ -128,8 +186,16 @@
             })
     </script>
 </head>
-<body class="bg-gray-200 min-h-screen p-4">
+<body class="bg-gray-200 min-h-screen p-4" data-controller="language">
     <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-2">
+        <div class="flex justify-end mb-2">
+            <button 
+                class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm"
+                data-action="click->language#toggle"
+                data-language-target="selector">
+                EN
+            </button>
+        </div>
         <h1 class="text-3xl font-bold mb-2 text-center">AutoQ</h1>
         <h2 class="text-xl mb-1 text-center text-gray-600">Katsu Midori, Central World</h2>
         <div data-controller="queue-selection">
@@ -171,7 +237,7 @@
             </div>
 
             <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="arrival-time">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="arrival-time" data-translate="arrivalTime">
                     Arrival Time
                 </label>
                 <input type="text" id="arrival-time"
@@ -181,7 +247,8 @@
 
             <div class="w-full">
                 <button data-action="click->queue-selection#submitQueue"
-                        class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">
+                        class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline"
+                        data-translate="queue">
                     Queue
                 </button>
             </div>
