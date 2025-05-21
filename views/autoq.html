@@ -184,7 +184,10 @@ Queue คิว
 
                         const result = await response.json();
                         console.log('Queue submitted:', result);
-                        alert('Queue request submitted successfully!');
+                        const successMessage = document.querySelector('[data-controller="language"]').__stimulusController.currentLangValue === 'en' 
+                            ? 'Queue request submitted successfully!'
+                            : 'การจองของคุณสำเร็จแล้ว';
+                        alert(successMessage);
                     } catch (error) {
                         console.error('Error submitting queue:', error);
                         alert('Error submitting queue request');
