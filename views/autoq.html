@@ -64,7 +64,7 @@
                         // Update wait time message for default selection
                         const waitTime = parseInt(defaultImage.dataset.waitTime);
                         const endTime = defaultDate.plus({ minutes: waitTime });
-                        this.waitTimeMessageTarget.textContent = `1 queue being called between ${defaultDate.toFormat('HH:mm')} - ${endTime.toFormat('HH:mm')}`;
+                        this.waitTimeMessageTarget.textContent = `1 queue being called between\n${defaultDate.toFormat('HH:mm')} - ${endTime.toFormat('HH:mm')}`;
                     }
                 }
 
