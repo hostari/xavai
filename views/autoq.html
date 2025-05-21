@@ -36,9 +36,16 @@
                         arrivalTime: "Arrival Time"
                     },
                     th: {
-                        queuesBetween: "[TH] queues being called between",
-                        queue: "[TH] Queue",
-                        arrivalTime: "[TH] Arrival Time"
+		    2 queues being called between
+10:00 - 10:10
+2 คิว จะถูกเรียกภายในเวลา 10:00 - 10:10
+
+Arrival Time เวลาถึง
+
+Queue คิว
+                        queuesBetween: "คิว จะถูกเรียกภายในเวลา",
+                        queue: "คิว",
+                        arrivalTime: "เวลาถึง"
                     }
                 }
 
@@ -153,7 +160,7 @@
                     const queueWord = queueCount === 1 ? 'queue' : 'queues'
                     const betweenText = document.querySelector('[data-controller="language"]').__stimulusController.currentLangValue === 'en' 
                         ? 'queues being called between'
-                        : '[TH] queues being called between'
+                        : 'คิว จะถูกเรียกภายในเวลา'
                     this.waitTimeMessageTarget.textContent = `${queueCount} ${queueWord} ${betweenText}\n${arrivalTime.toFormat('HH:mm')} - ${endTime.toFormat('HH:mm')}`;
                 }
 
