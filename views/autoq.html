@@ -43,6 +43,8 @@
                         minuteIncrement: 5,
                         minTime: "10:00",
                         maxTime: "20:00",
+                        disableMobile: true,
+                        enableSeconds: false,
                         onChange: (selectedDates) => {
                             // Update message if an image is selected
                             const selectedImage = this.element.querySelector('[data-queue-selection-target="border"]:not(.hidden)').closest('[data-queue-selection-target="imageContainer"]').querySelector('img');
@@ -165,7 +167,7 @@
             </div>
 
             <div class="mb-1">
-                <p class="text-lg text-center whitespace-pre-line font-semibold mb-1" data-queue-selection-target="waitTimeMessage">Select an option to see wait time</p>
+                <p class="text-lg text-center whitespace-pre-line font-semibold mb-1" data-queue-selection-target="waitTimeMessage">Select an option to see\nwait time</p>
             </div>
 
             <div class="mb-4">
