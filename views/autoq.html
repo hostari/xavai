@@ -37,12 +37,16 @@
                     en: {
                         queuesBetween: "queues being called between",
                         queue: "Queue",
-                        arrivalTime: "Arrival Time"
+                        arrivalTime: "Arrival Time",
+                        selectOption: "Select an option to see\nwait time",
+                        queueText: (count) => `${count} ${count === 1 ? 'queue' : 'queues'} being called between`
                     },
                     th: {
                         queuesBetween: "คิว จะถูกเรียกภายในเวลา",
                         queue: "คิว",
-                        arrivalTime: "เวลาถึง"
+                        arrivalTime: "เวลาถึง",
+                        selectOption: "เลือกตัวเลือกเพื่อดู\nเวลารอ",
+                        queueText: (count) => `${count} คิว จะถูกเรียกภายในเวลา`
                     }
                 }
 
@@ -51,6 +55,12 @@
                 this.thLinkTarget.classList.toggle('font-bold', this.currentLangValue === 'th');
 
                 const lang = translations[this.currentLangValue]
+
+                // Update initial message if no queue is selected
+                const waitTimeMessage = document.querySelector('[data-queue-selection-target="waitTimeMessage"]');
+                if (waitTimeMessage && waitTimeMessage.textContent.includes('Select an option')) {
+                    waitTimeMessage.textContent = lang.selectOption;
+                }
                 
                 // Update all elements with data-translate attribute
                 document.querySelectorAll('[data-translate]').forEach(el => {
@@ -161,12 +171,17 @@
                     const languageController = document.querySelector('[data-controller="language"]').__stimulusController;
                     const isEnglish = !languageController || languageController.currentLangValue === 'en';
                     
-                    if (isEnglish) {
-                        const queueWord = queueCount === 1 ? 'queue' : 'queues';
-                        this.waitTimeMessageTarget.textContent = `${queueCount} ${queueWord} being called between\n${arrivalTime.toFormat('HH:mm')} - ${endTime.toFormat('HH:mm')}`;
-                    } else {
-                        this.waitTimeMessageTarget.textContent = `${queueCount} คิว จะถูกเรียกภายในเวลา\n${arrivalTime.toFormat('HH:mm')} - ${endTime.toFormat('HH:mm')}`;
-                    }
+                    const translations = {
+                        en: {
+                            queueText: (count) => `${count} ${count === 1 ? 'queue' : 'queues'} being called between`
+                        },
+                        th: {
+                            queueText: (count) => `${count} คิว จะถูกเรียกภายในเวลา`
+                        }
+                    };
+                    
+                    const lang = translations[languageController.currentLangValue] || translations.en;
+                    this.waitTimeMessageTarget.textContent = `${lang.queueText(queueCount)}\n${arrivalTime.toFormat('HH:mm')} - ${endTime.toFormat('HH:mm')}`;
                 }
 
                 async submitQueue() {
