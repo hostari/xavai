@@ -26,8 +26,9 @@
                 this.updateTranslations()
             }
 
-            toggle() {
-                this.currentLangValue = this.currentLangValue === 'en' ? 'th' : 'en'
+            setLanguage(event) {
+                event.preventDefault()
+                this.currentLangValue = event.currentTarget.dataset.language
                 this.updateTranslations()
             }
 
@@ -159,10 +160,12 @@
                     const languageController = document.querySelector('[data-controller="language"]').__stimulusController;
                     const isEnglish = !languageController || languageController.currentLangValue === 'en';
                     
-                    const queueWord = isEnglish ? (queueCount === 1 ? 'queue' : 'queues') : 'คิว';
-                    const betweenText = isEnglish ? 'queues being called between' : 'จะถูกเรียกภายในเวลา';
-                    
-                    this.waitTimeMessageTarget.textContent = `${queueCount} ${queueWord} ${betweenText}\n${arrivalTime.toFormat('HH:mm')} - ${endTime.toFormat('HH:mm')}`;
+                    if (isEnglish) {
+                        const queueWord = queueCount === 1 ? 'queue' : 'queues';
+                        this.waitTimeMessageTarget.textContent = `${queueCount} ${queueWord} being called between\n${arrivalTime.toFormat('HH:mm')} - ${endTime.toFormat('HH:mm')}`;
+                    } else {
+                        this.waitTimeMessageTarget.textContent = `${queueCount} คิว จะถูกเรียกภายในเวลา\n${arrivalTime.toFormat('HH:mm')} - ${endTime.toFormat('HH:mm')}`;
+                    }
                 }
 
                 async submitQueue() {
@@ -199,13 +202,16 @@
 </head>
 <body class="bg-gray-200 min-h-screen p-4" data-controller="language">
     <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-2">
-        <div class="flex justify-end mb-2">
-            <button 
-                class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm"
-                data-action="click->language#toggle"
-                data-language-target="selector">
-                TH
-            </button>
+        <div class="flex justify-end mb-2 space-x-1 text-sm">
+            <a href="#" 
+               class="text-gray-600 hover:text-gray-900"
+               data-action="click->language#setLanguage"
+               data-language="en">EN</a>
+            <span class="text-gray-400">/</span>
+            <a href="#" 
+               class="text-gray-600 hover:text-gray-900"
+               data-action="click->language#setLanguage"
+               data-language="th">TH</a>
         </div>
         <h1 class="text-3xl font-bold mb-2 text-center">AutoQ</h1>
         <h2 class="text-xl mb-1 text-center text-gray-600">Katsu Midori, Central World</h2>
