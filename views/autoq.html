@@ -33,6 +33,15 @@
             }
 
             updateTranslations() {
+                // Update the queue message first
+                const queueController = this.application.getControllerForElementAndIdentifier(
+                    document.querySelector('[data-controller="queue-selection"]'),
+                    'queue-selection'
+                )
+                if (queueController) {
+                    queueController.updateLanguage(this.currentLangValue)
+                }
+
                 const translations = {
                     en: {
                         queuesBetween: "queues being called between",
@@ -110,7 +119,7 @@
                         time_24hr: true,
                         hourIncrement: 1,
                         minuteIncrement: 5,
-                        minTime: "10:00",
+                        minTime: now.toFormat('HH:mm'),
                         maxTime: "20:00",
                         disableMobile: true,
                         enableSeconds: false,
@@ -198,6 +207,17 @@
                 async submitQueue() {
                     if (!this.selectedQueuePriceId || !this.arrivalTimeTarget.value) {
                         alert('Please select a queue option and arrival time');
+                        return;
+                    }
+
+                    const selectedTime = luxon.DateTime.fromSQL(this.arrivalTimeTarget.value);
+                    const now = luxon.DateTime.now().setZone('Asia/Bangkok');
+                    
+                    if (selectedTime < now) {
+                        const errorMessage = this.currentLang === 'en' 
+                            ? 'Selected time cannot be in the past'
+                            : 'ไม่สามารถเลือกเวลาในอดีตได้';
+                        alert(errorMessage);
                         return;
                     }
 
