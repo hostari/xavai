@@ -38,7 +38,16 @@
                         dateFormat: "Y-m-d H:i",
                         minDate: "today",
                         defaultDate: defaultDate.toJSDate(),
-                        time_24hr: true
+                        time_24hr: true,
+                        minTime: "10:00",
+                        maxTime: "20:00",
+                        onChange: (selectedDates) => {
+                            // Update message if an image is selected
+                            const selectedImage = this.element.querySelector('[data-queue-selection-target="border"]:not(.hidden)').closest('[data-queue-selection-target="imageContainer"]').querySelector('img');
+                            if (selectedImage) {
+                                this.updateWaitTimeMessage(selectedImage);
+                            }
+                        }
                     });
 
                     // Select default option (100.png) and trigger the selection
@@ -71,8 +80,16 @@
                     const waitTime = parseInt(event.target.dataset.waitTime);
                     const endTime = arrivalTime.plus({ minutes: waitTime });
                     
-                    // Update message with proper formatting
-                    this.waitTimeMessageTarget.textContent = `1 queue being called between ${arrivalTime.toFormat('HH:mm')} - ${endTime.toFormat('HH:mm')}`;
+                    this.updateWaitTimeMessage(event.target);
+                }
+
+                updateWaitTimeMessage(imageElement) {
+                    const arrivalTime = luxon.DateTime.fromSQL(this.arrivalTimeTarget.value);
+                    const waitTime = parseInt(imageElement.dataset.waitTime);
+                    const endTime = arrivalTime.plus({ minutes: waitTime });
+                    const queueCount = parseInt(imageElement.dataset.queuePriceId);
+                    
+                    this.waitTimeMessageTarget.textContent = `${queueCount} ${queueCount === 1 ? 'queue' : 'queues'} being called between ${arrivalTime.toFormat('HH:mm')} - ${endTime.toFormat('HH:mm')}`;
                 }
 
                 async submitQueue() {
