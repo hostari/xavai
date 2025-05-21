@@ -37,12 +37,18 @@
                     en: {
                         queuesBetween: "queues being called between",
                         queue: "Queue",
-                        arrivalTime: "Arrival Time"
+                        arrivalTime: "Arrival Time",
+                        queueSingular: "queue",
+                        queuePlural: "queues",
+                        beingCalledBetween: "being called between"
                     },
                     th: {
                         queuesBetween: "คิว จะถูกเรียกภายในเวลา",
                         queue: "คิว",
-                        arrivalTime: "เวลาถึง"
+                        arrivalTime: "เวลาถึง",
+                        queueSingular: "คิว",
+                        queuePlural: "คิว",
+                        beingCalledBetween: "จะถูกเรียกภายในเวลา"
                     }
                 }
 
@@ -150,6 +156,8 @@
                 }
 
                 updateWaitTimeMessage(imageElement) {
+                    if (!imageElement) return;
+                    
                     const arrivalTime = luxon.DateTime.fromSQL(this.arrivalTimeTarget.value);
                     const waitTime = parseInt(imageElement.dataset.waitTime);
                     const endTime = arrivalTime.plus({ minutes: waitTime });
@@ -159,14 +167,23 @@
                     const queueCount = images.indexOf(imageElement) + 1; // +1 because index starts at 0
                     
                     const languageController = document.querySelector('[data-controller="language"]').__stimulusController;
-                    const isEnglish = !languageController || languageController.currentLangValue === 'en';
+                    const currentLang = languageController ? languageController.currentLangValue : 'en';
+                    const translations = {
+                        en: {
+                            queueSingular: "queue",
+                            queuePlural: "queues",
+                            beingCalledBetween: "being called between"
+                        },
+                        th: {
+                            queueSingular: "คิว",
+                            queuePlural: "คิว",
+                            beingCalledBetween: "จะถูกเรียกภายในเวลา"
+                        }
+                    };
                     
-                    if (isEnglish) {
-                        const queueWord = queueCount === 1 ? 'queue' : 'queues';
-                        this.waitTimeMessageTarget.textContent = `${queueCount} ${queueWord} being called between\n${arrivalTime.toFormat('HH:mm')} - ${endTime.toFormat('HH:mm')}`;
-                    } else {
-                        this.waitTimeMessageTarget.textContent = `${queueCount} คิว จะถูกเรียกภายในเวลา\n${arrivalTime.toFormat('HH:mm')} - ${endTime.toFormat('HH:mm')}`;
-                    }
+                    const t = translations[currentLang];
+                    const queueWord = queueCount === 1 ? t.queueSingular : t.queuePlural;
+                    this.waitTimeMessageTarget.textContent = `${queueCount} ${queueWord} ${t.beingCalledBetween}\n${arrivalTime.toFormat('HH:mm')} - ${endTime.toFormat('HH:mm')}`;
                 }
 
                 async submitQueue() {
