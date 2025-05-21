@@ -97,12 +97,12 @@
             })
     </script>
 </head>
-<body class="bg-gray-100 min-h-screen p-8">
-    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
+<body class="bg-gray-100 min-h-screen p-6">
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-4">
         <h1 class="text-3xl font-bold mb-2 text-center">AutoQ</h1>
         <h2 class="text-xl mb-8 text-center text-gray-600">Katsu Midori, Central World</h2>
         <div data-controller="queue-selection">
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-6 mb-8">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-1 mb-1">
                 <div class="relative" data-queue-selection-target="imageContainer">
                     <img src="/100.png" class="w-full rounded-lg cursor-pointer" data-action="click->queue-selection#selectImage" data-queue-price-id="1" data-wait-time="5">
                     <div class="absolute inset-0 border-4 border-blue-500 rounded-lg" data-queue-selection-target="border"></div>
@@ -135,11 +135,11 @@
                 </div>
             </div>
 
-            <div class="mb-6">
-                <p class="text-lg font-semibold mb-2" data-queue-selection-target="waitTimeMessage">Select an option to see wait time</p>
+            <div class="mb-1">
+                <p class="text-lg font-semibold mb-1" data-queue-selection-target="waitTimeMessage">Select an option to see wait time</p>
             </div>
 
-            <div class="mb-6">
+            <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="arrival-time">
                     Arrival Time
                 </label>
