@@ -18,8 +18,11 @@
                 currentLang: String
             }
 
-            connect() {
+            initialize() {
                 this.currentLangValue = 'en'
+            }
+
+            connect() {
                 this.updateTranslations()
             }
 
@@ -151,7 +154,8 @@
                     const queueCount = images.indexOf(imageElement) + 1; // +1 because index starts at 0
                     
                     const queueWord = queueCount === 1 ? 'queue' : 'queues'
-                    const betweenText = document.querySelector('[data-controller="language"]').__stimulusController.currentLangValue === 'en' 
+                    const languageController = document.querySelector('[data-controller="language"]').__stimulusController;
+                    const betweenText = (!languageController || languageController.currentLangValue === 'en')
                         ? 'queues being called between'
                         : 'คิว จะถูกเรียกภายในเวลา'
                     this.waitTimeMessageTarget.textContent = `${queueCount} ${queueWord} ${betweenText}\n${arrivalTime.toFormat('HH:mm')} - ${endTime.toFormat('HH:mm')}`;
