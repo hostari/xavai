@@ -45,6 +45,9 @@
                     }
                 }
 
+                // Update language button text
+                this.selectorTarget.textContent = this.currentLangValue === 'en' ? 'TH' : 'EN'
+
                 const lang = translations[this.currentLangValue]
                 
                 // Update all elements with data-translate attribute
@@ -153,11 +156,12 @@
                     const images = Array.from(this.element.querySelectorAll('img'));
                     const queueCount = images.indexOf(imageElement) + 1; // +1 because index starts at 0
                     
-                    const queueWord = queueCount === 1 ? 'queue' : 'queues'
                     const languageController = document.querySelector('[data-controller="language"]').__stimulusController;
-                    const betweenText = (!languageController || languageController.currentLangValue === 'en')
-                        ? 'queues being called between'
-                        : 'คิว จะถูกเรียกภายในเวลา'
+                    const isEnglish = !languageController || languageController.currentLangValue === 'en';
+                    
+                    const queueWord = isEnglish ? (queueCount === 1 ? 'queue' : 'queues') : 'คิว';
+                    const betweenText = isEnglish ? 'queues being called between' : 'จะถูกเรียกภายในเวลา';
+                    
                     this.waitTimeMessageTarget.textContent = `${queueCount} ${queueWord} ${betweenText}\n${arrivalTime.toFormat('HH:mm')} - ${endTime.toFormat('HH:mm')}`;
                 }
 
@@ -200,7 +204,7 @@
                 class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm"
                 data-action="click->language#toggle"
                 data-language-target="selector">
-                EN
+                TH
             </button>
         </div>
         <h1 class="text-3xl font-bold mb-2 text-center">AutoQ</h1>
