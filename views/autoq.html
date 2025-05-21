@@ -165,8 +165,9 @@
 
                 updateLanguage(lang) {
                     this.currentLang = lang
-                    const selectedImage = this.element.querySelector('img[data-queue-selection-target="border"]:not(.hidden)')
-                    if (selectedImage) {
+                    const selectedBorder = this.element.querySelector('[data-queue-selection-target="border"]:not(.hidden)')
+                    if (selectedBorder) {
+                        const selectedImage = selectedBorder.closest('[data-queue-selection-target="imageContainer"]').querySelector('img')
                         this.updateWaitTimeMessage(selectedImage)
                     }
                 }
