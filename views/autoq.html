@@ -70,12 +70,13 @@
                     }
                 })
 
-                // Update the queue message format
-                const queueController = this.element.querySelector('[data-controller="queue-selection"]').__stimulusController
+                // Update the queue message format using direct controller access
+                const queueController = this.application.getControllerForElementAndIdentifier(
+                    document.querySelector('[data-controller="queue-selection"]'),
+                    'queue-selection'
+                )
                 if (queueController) {
-                    queueController.updateWaitTimeMessage(
-                        queueController.element.querySelector('img[data-queue-selection-target="border"]:not(.hidden)')
-                    )
+                    queueController.updateLanguage(this.currentLangValue)
                 }
             }
         })
@@ -155,6 +156,16 @@
                     this.updateWaitTimeMessage(event.target);
                 }
 
+                currentLang = 'en'
+
+                updateLanguage(lang) {
+                    this.currentLang = lang
+                    const selectedImage = this.element.querySelector('img[data-queue-selection-target="border"]:not(.hidden)')
+                    if (selectedImage) {
+                        this.updateWaitTimeMessage(selectedImage)
+                    }
+                }
+
                 updateWaitTimeMessage(imageElement) {
                     if (!imageElement) return;
                     
@@ -166,8 +177,6 @@
                     const images = Array.from(this.element.querySelectorAll('img'));
                     const queueCount = images.indexOf(imageElement) + 1; // +1 because index starts at 0
                     
-                    const languageController = document.querySelector('[data-controller="language"]').__stimulusController;
-                    const currentLang = languageController ? languageController.currentLangValue : 'en';
                     const translations = {
                         en: {
                             queueSingular: "queue",
@@ -181,7 +190,7 @@
                         }
                     };
                     
-                    const t = translations[currentLang];
+                    const t = translations[this.currentLang];
                     const queueWord = queueCount === 1 ? t.queueSingular : t.queuePlural;
                     this.waitTimeMessageTarget.textContent = `${queueCount} ${queueWord} ${t.beingCalledBetween}\n${arrivalTime.toFormat('HH:mm')} - ${endTime.toFormat('HH:mm')}`;
                 }
