@@ -13,7 +13,7 @@
 	window.Stimulus = Application.start();
 
         Stimulus.register("language", class extends Controller {
-            static targets = ["selector"]
+            static targets = ["enLink", "thLink"]
             static values = {
                 currentLang: String
             }
@@ -46,8 +46,9 @@
                     }
                 }
 
-                // Update language button text
-                this.selectorTarget.textContent = this.currentLangValue === 'en' ? 'TH' : 'EN'
+                // Update language link styles
+                this.enLinkTarget.classList.toggle('font-bold', this.currentLangValue === 'en');
+                this.thLinkTarget.classList.toggle('font-bold', this.currentLangValue === 'th');
 
                 const lang = translations[this.currentLangValue]
                 
@@ -206,12 +207,14 @@
             <a href="#" 
                class="text-gray-600 hover:text-gray-900"
                data-action="click->language#setLanguage"
-               data-language="en">EN</a>
+               data-language="en"
+               data-language-target="enLink">EN</a>
             <span class="text-gray-400">/</span>
             <a href="#" 
                class="text-gray-600 hover:text-gray-900"
                data-action="click->language#setLanguage"
-               data-language="th">TH</a>
+               data-language="th"
+               data-language-target="thLink">TH</a>
         </div>
         <h1 class="text-3xl font-bold mb-2 text-center">AutoQ</h1>
         <h2 class="text-xl mb-1 text-center text-gray-600">Katsu Midori, Central World</h2>
