@@ -232,7 +232,7 @@
 
                         const result = await response.json();
                         console.log('Queue submitted:', result);
-                        const successMessage = document.querySelector('[data-controller="language"]').__stimulusController.currentLangValue === 'en' 
+                        const successMessage = this.currentLang === 'en'
                             ? 'Queue request submitted successfully!'
                             : 'การจองของคุณสำเร็จแล้ว';
                         alert(successMessage);
