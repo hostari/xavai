@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AutoQ</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.6.1/build/global/luxon.min.js"></script>
     <script type="module">
 	import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js";
 	window.Stimulus = Application.start();
@@ -15,24 +15,21 @@
 		static targets = ["imageContainer", "border", "waitTimeMessage", "arrivalTime"]
                 
                 connect() {
-                    const now = moment().tz("Asia/Bangkok");
+                    const now = luxon.DateTime.now().setZone('Asia/Bangkok');
                     let defaultDate;
                     
-                    if (now.hour() < 10 || now.hour() >= 22) {
+                    if (now.hour < 10 || now.hour >= 22) {
                         // If current time is between 22:00-09:59, set to next day 10:00
-                        defaultDate = now.clone().startOf('day').hour(10).minute(0);
-                        if (now.hour() < 10) {
-                            defaultDate = defaultDate.startOf('day');
-                        } else {
-                            defaultDate = defaultDate.add(1, 'day');
+                        defaultDate = now.startOf('day').set({ hour: 10 });
+                        if (now.hour >= 22) {
+                            defaultDate = defaultDate.plus({ days: 1 });
                         }
                     } else {
                         // If current time is between 10:00-20:00, round to next 5 minutes
-                        defaultDate = now.clone();
-                        const minutes = Math.ceil(defaultDate.minutes() / 5) * 5;
-                        defaultDate.minutes(minutes);
+                        const minutes = Math.ceil(now.minute / 5) * 5;
+                        defaultDate = now.set({ minute: minutes });
                         if (minutes === 60) {
-                            defaultDate.add(1, 'hour').minutes(0);
+                            defaultDate = defaultDate.plus({ hours: 1 }).set({ minute: 0 });
                         }
                     }
 
@@ -63,12 +60,12 @@
                     this.selectedQueuePriceId = event.target.dataset.queuePriceId;
                     
                     // Get arrival time and calculate wait time based on selection
-                    const arrivalTime = moment(this.arrivalTimeTarget.value);
+                    const arrivalTime = luxon.DateTime.fromSQL(this.arrivalTimeTarget.value);
                     const waitTime = parseInt(event.target.dataset.waitTime);
-                    const endTime = arrivalTime.clone().add(waitTime, 'minutes');
+                    const endTime = arrivalTime.plus({ minutes: waitTime });
                     
                     // Update message with proper formatting
-                    this.waitTimeMessageTarget.textContent = `1 queue being called between ${arrivalTime.format('HH:mm')} - ${endTime.format('HH:mm')}`;
+                    this.waitTimeMessageTarget.textContent = `1 queue being called between ${arrivalTime.toFormat('HH:mm')} - ${endTime.toFormat('HH:mm')}`;
                 }
 
                 async submitQueue() {
