@@ -87,7 +87,10 @@
                     const arrivalTime = luxon.DateTime.fromSQL(this.arrivalTimeTarget.value);
                     const waitTime = parseInt(imageElement.dataset.waitTime);
                     const endTime = arrivalTime.plus({ minutes: waitTime });
-                    const queueCount = parseInt(imageElement.dataset.queuePriceId);
+                    
+                    // Find the index of the selected image among all images
+                    const images = Array.from(this.element.querySelectorAll('img'));
+                    const queueCount = images.indexOf(imageElement) + 1; // +1 because index starts at 0
                     
                     this.waitTimeMessageTarget.textContent = `${queueCount} ${queueCount === 1 ? 'queue' : 'queues'} being called between ${arrivalTime.toFormat('HH:mm')} - ${endTime.toFormat('HH:mm')}`;
                 }
