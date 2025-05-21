@@ -34,12 +34,12 @@
 
             updateTranslations() {
                 // Update the queue message first
-                const queueController = this.application.getControllerForElementAndIdentifier(
+                const qController = this.application.getControllerForElementAndIdentifier(
                     document.querySelector('[data-controller="queue-selection"]'),
                     'queue-selection'
                 )
-                if (queueController) {
-                    queueController.updateLanguage(this.currentLangValue)
+                if (qController) {
+                    qController.updateLanguage(this.currentLangValue)
                 }
 
                 const translations = {
@@ -80,12 +80,8 @@
                 })
 
                 // Update the queue message format using direct controller access
-                const queueController = this.application.getControllerForElementAndIdentifier(
-                    document.querySelector('[data-controller="queue-selection"]'),
-                    'queue-selection'
-                )
-                if (queueController) {
-                    queueController.updateLanguage(this.currentLangValue)
+                if (qController) {
+                    qController.updateLanguage(this.currentLangValue)
                 }
             }
         })
