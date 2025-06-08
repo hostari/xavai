@@ -1,6 +1,6 @@
 <html>
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
     <link
       rel="stylesheet"
@@ -19,16 +19,16 @@
       class="relative flex w-full min-h-screen flex-col bg-white group/design-root"
       style='--checkbox-tick-svg: url(&apos;data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27rgb(18,21,22)%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z%27/%3e%3c/svg%3e&apos;); font-family: "Plus Jakarta Sans", "Noto Sans", sans-serif;'
     >
-      <div class="container mx-auto layout-container flex h-full w-full grow flex-col overflow-x-hidden">
+      <div class="min-h-screen w-full max-w-7xl mx-auto flex flex-col">
         <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f1f3f4] px-4 md:px-10 py-3">
           <div class="flex items-center gap-4 text-[#121516]">
             <img src="/xavai.jpg" alt="xavAI logo" class="w-8 h-8 rounded-full"/>
             <h2 class="text-[#121516] text-lg font-bold leading-tight tracking-[-0.015em]">xavAI Trip Planner</h2>
           </div>
         </header>
-        <div class="w-full max-w-full px-4 md:px-40 flex flex-1 justify-center py-5 overflow-x-hidden">
-          <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
-            <div class="flex flex-wrap justify-between gap-3 px-4 py-2">
+        <main class="flex-1 w-full max-w-3xl mx-auto px-4 sm:px-6 md:px-8 py-6">
+          <div class="w-full">
+            <div class="flex flex-wrap justify-between gap-3 mb-8">
               <div class="flex min-w-72 flex-col gap-3">
                 <p class="text-[#121516] tracking-light text-2xl md:text-[32px] font-bold leading-tight">Masungi Georeserve Trip Details - Saturday, June 14, 2025</p>
                 <p class="text-[#6a7881] text-base md:text-sm font-normal leading-normal">Here's everything you need to know for your upcoming adventure.</p>
@@ -157,23 +157,25 @@
               </div>
             </div>
 	    <p class="text-[#121516] text-base font-normal leading-normal pb-3 pt-1 px-4">Xavi has pre-paid for 7 guests at Php 1,800.00 per guest. <b>Please pay Php 1,800.00 to any of the QR codes below.</b></p>
-            <div class="px-4">
-              <img src="/bpi-qr-xavi.png" alt="Xavi's BPI QR Code" class="w-full max-w-md rounded-lg shadow-md"/>
-            </div>
-            <div class="px-4">
-              <img src="/ub-qr-xavi.png" alt="Xavi's UB QR Code" class="max-w-md rounded-lg shadow-md"/>
-            </div>
-            <div class="px-4">
-              <img src="/gcash-qr-xavi.png" alt="Xavi's GCash QR Code" class="max-w-md rounded-lg shadow-md"/>
-            </div>
-            <div class="px-4">
-              <img src="/maya-qr-xavi.png" alt="Xavi's Maya QR Code" class="max-w-md rounded-lg shadow-md"/>
-            </div>
-            <div class="px-4">
-              <img src="/komo-qr-xavi.png" alt="Xavi's Komo QR Code" class="max-w-md rounded-lg shadow-md"/>
-            </div>
-            <div class="px-4">
-              <img src="/masungi-payment-proof.jpg" alt="Payment proof for Masungi Georeserve booking" class="max-w-md rounded-lg shadow-md"/>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+              <div class="w-full">
+                <img src="/bpi-qr-xavi.png" alt="Xavi's BPI QR Code" class="w-full h-auto rounded-lg shadow-md"/>
+              </div>
+              <div class="w-full">
+                <img src="/ub-qr-xavi.png" alt="Xavi's UB QR Code" class="w-full h-auto rounded-lg shadow-md"/>
+              </div>
+              <div class="w-full">
+                <img src="/gcash-qr-xavi.png" alt="Xavi's GCash QR Code" class="w-full h-auto rounded-lg shadow-md"/>
+              </div>
+              <div class="w-full">
+                <img src="/maya-qr-xavi.png" alt="Xavi's Maya QR Code" class="w-full h-auto rounded-lg shadow-md"/>
+              </div>
+              <div class="w-full">
+                <img src="/komo-qr-xavi.png" alt="Xavi's Komo QR Code" class="w-full h-auto rounded-lg shadow-md"/>
+              </div>
+              <div class="w-full">
+                <img src="/masungi-payment-proof.jpg" alt="Payment proof for Masungi Georeserve booking" class="w-full h-auto rounded-lg shadow-md"/>
+              </div>
             </div>
           </div>
         </div>
