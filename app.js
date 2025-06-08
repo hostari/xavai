@@ -64,7 +64,7 @@ app.post('/katsu-midori-thailand-centralworld/queue-request', (req, res) => {
 });
 
 app.get('/masungi-georeserve', (req, res) => {
-
+  res.sendFile(path.join(process.cwd(), 'views', 'masungi-georeserve.html'));
 });
 
 // register a webhook handler with middleware
