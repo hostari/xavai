@@ -4,6 +4,11 @@ import axios from 'axios'
 import * as fs from 'fs'
 import crypto from 'crypto'
 import path from 'path'
+import { Duffel } from '@duffel/api'
+
+const duffel = new Duffel({
+  token: process.env.DUFFEL_TOKEN,
+})
 
 async function callLMStudio(userMessage) {
   try {
@@ -56,6 +61,10 @@ app.get('/autoq', (_req, res) => {
 app.post('/katsu-midori-thailand-centralworld/queue-request', (req, res) => {
   console.log('Queue Request:', req.body);
   res.json({ status: 'success', data: req.body });
+});
+
+app.get('/masungi-georeserve', (req, res) => {
+
 });
 
 // register a webhook handler with middleware
