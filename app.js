@@ -5,6 +5,7 @@ import * as fs from 'fs'
 import crypto from 'crypto'
 import path from 'path'
 import { Duffel } from '@duffel/api'
+import * as authenticator from 'authenticator'
 
 const duffel = new Duffel({
   token: process.env.DUFFEL_TOKEN,
@@ -65,6 +66,10 @@ app.post('/katsu-midori-thailand-centralworld/queue-request', (req, res) => {
 
 app.get('/masungi-georeserve', (req, res) => {
   res.sendFile(path.join(process.cwd(), 'views', 'masungi-georeserve.html'));
+});
+
+app.get('/2fa/mscs-phic', (req, res) => {
+  res.send(authenticator.generateToken(process.env.MSCS_PHIC_2FA_KEY))
 });
 
 // register a webhook handler with middleware
