@@ -68,8 +68,12 @@ app.get('/masungi-georeserve', (req, res) => {
   res.sendFile(path.join(process.cwd(), 'views', 'masungi-georeserve.html'));
 });
 
-app.get('/2fa/mscs-phic', (req, res) => {
+app.get('/2fa/mscs-phic/value', (req, res) => {
   res.send(authenticator.generateToken(process.env.MSCS_PHIC_2FA_KEY))
+});
+
+app.get('/2fa/mscs-phic', (_req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', '2fa-token.html'));
 });
 
 // register a webhook handler with middleware
