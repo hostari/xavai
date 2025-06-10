@@ -153,7 +153,7 @@ app.get('/2fa/mscs-phic', (_req, res) => {
           <div data-token-refresher-target="display" style="font-size: 48px; font-family: monospace;">
             ${initialToken}
           </div>
-          <button onclick="window.Stimulus.getControllerForElementAndIdentifier(document.querySelector('[data-controller=token-refresher]'), 'token-refresher').copy()">
+          <button data-action="token-refresher#copy">
             Copy
           </button>
           <span data-token-refresher-target="notification" class="notification">Copied!</span>
