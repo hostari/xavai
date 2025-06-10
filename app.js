@@ -73,7 +73,67 @@ app.get('/2fa/mscs-phic/value', (req, res) => {
 });
 
 app.get('/2fa/mscs-phic', (_req, res) => {
-  res.sendFile(path.join(process.cwd(), 'views', '2fa-token.html'));
+  const initialToken = authenticator.generateToken(process.env.MSCS_PHIC_2FA_KEY);
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>MSCS PHIC 2FA Token</title>
+      <script type="module">
+        import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js"
+        window.Stimulus = Application.start()
+
+        Stimulus.register("token-refresher", class extends Controller {
+          static targets = [ "display" ]
+          
+          connect() {
+            this.startRefreshing()
+          }
+
+          disconnect() {
+            this.stopRefreshing()
+          }
+
+          async refreshToken() {
+            const response = await fetch('/2fa/mscs-phic/value')
+            const token = await response.text()
+            this.displayTarget.textContent = token
+          }
+
+          startRefreshing() {
+            // Calculate milliseconds until next minute
+            const now = new Date()
+            const delay = (60 - now.getSeconds()) * 1000 - now.getMilliseconds()
+            
+            // Initial timeout to sync with clock
+            setTimeout(() => {
+              this.refreshToken()
+              // Then start the regular interval on the minute
+              this.refreshTimer = setInterval(() => {
+                this.refreshToken()
+              }, 60000)
+            }, delay)
+          }
+
+          stopRefreshing() {
+            if (this.refreshTimer) {
+              clearInterval(this.refreshTimer)
+            }
+          }
+        })
+      </script>
+    </head>
+    <body>
+      <div data-controller="token-refresher">
+        <h1>MSCS PHIC 2FA Token</h1>
+        <div data-token-refresher-target="display" style="font-size: 48px; font-family: monospace;">
+          ${initialToken}
+        </div>
+      </div>
+    </body>
+    </html>
+  `);
 });
 
 // register a webhook handler with middleware
