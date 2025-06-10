@@ -26,9 +26,18 @@
       }
 
       startRefreshing() {
-        this.refreshTimer = setInterval(() => {
+        // Calculate milliseconds until next minute
+        const now = new Date()
+        const delay = (60 - now.getSeconds()) * 1000 - now.getMilliseconds()
+        
+        // Initial timeout to sync with clock
+        setTimeout(() => {
           this.refreshToken()
-        }, 60000) // Refresh every minute
+          // Then start the regular interval on the minute
+          this.refreshTimer = setInterval(() => {
+            this.refreshToken()
+          }, 60000)
+        }, delay)
       }
 
       stopRefreshing() {
