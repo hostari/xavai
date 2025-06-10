@@ -123,11 +123,7 @@ app.get('/2fa/mscs-phic', (_req, res) => {
           async updateClock() {
             const now = new Date()
             this.clockTarget.textContent = now.toLocaleTimeString()
-            
-            if (now.getMinutes() !== this.lastMinute) {
-              this.lastMinute = now.getMinutes()
-              await this.refreshToken()
-            }
+            await this.refreshToken()
           }
 
           async refreshToken() {
