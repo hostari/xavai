@@ -111,7 +111,6 @@ app.get('/2fa/mscs-phic', (_req, res) => {
           connect() {
             this.updateClock()
             this.clockTimer = setInterval(() => this.updateClock(), 1000)
-            this.lastMinute = new Date().getMinutes()
           }
 
           disconnect() {
@@ -122,8 +121,12 @@ app.get('/2fa/mscs-phic', (_req, res) => {
 
           async updateClock() {
             const now = new Date()
+            const seconds = now.getSeconds()
             this.clockTarget.textContent = now.toLocaleTimeString()
-            await this.refreshToken()
+
+            if (seconds === 0 || seconds === 30) {
+              await this.refreshToken()
+            }
           }
 
           async refreshToken() {
