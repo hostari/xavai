@@ -119,9 +119,6 @@ app.get('/wedding/flights/sfo-bkk', (req, res) => {
   res.sendFile(path.join(process.cwd(), 'views', 'sfo-bkk.html'));
 });
 
-app.get('/wedding/flights/sjc-bkk', (req, res) => {
-  res.sendFile(path.join(process.cwd(), 'views', 'sjc-bkk.html'));
-});
 
 app.get('/wedding/flights/lax-bkk', (req, res) => {
   res.sendFile(path.join(process.cwd(), 'views', 'lax-bkk.html'));
@@ -151,6 +148,7 @@ app.get('/wedding/flights/icn-choose', (req, res) => {
 app.get('/wedding/flights/pvg-choose', (req, res) => {
   res.sendFile(path.join(process.cwd(), 'views', 'pvg-choose.html'));
 });
+
 
 app.get('/2fa/mscs-phic/value', (req, res) => {
   res.send(authenticator.generateToken(process.env.MSCS_PHIC_2FA_KEY))

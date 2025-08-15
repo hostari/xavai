@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seoul to Bangkok - Xavi & Helen's Wedding</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background-color: #f4eee5;
+            color: #46544f;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            color: #46544f;
+            text-decoration: none;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            display: inline-block;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: normal;
+            letter-spacing: 2px;
+        }
+
+        .route-info {
+            background: rgba(70, 84, 79, 0.1);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .route-info h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #46544f;
+        }
+
+        .airport-codes {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #46544f;
+        }
+
+        .destination-choice {
+            margin-bottom: 3rem;
+        }
+
+        .destination-choice h3 {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #46544f;
+        }
+
+        .airport-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .airport-option {
+            background: rgba(70, 84, 79, 0.05);
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            color: #46544f;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .airport-option:hover {
+            background: rgba(70, 84, 79, 0.1);
+            border-color: #46544f;
+            transform: translateY(-2px);
+        }
+
+        .airport-option h4 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #46544f;
+        }
+
+        .airport-option .code {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #666;
+        }
+
+        .airport-option .description {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .recommendation {
+            background: rgba(70, 84, 79, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .recommendation h4 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #46544f;
+        }
+
+        .recommendation p {
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .airport-codes {
+                font-size: 1.5rem;
+            }
+
+            .airport-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/wedding/travel" class="back-link">← Back to Travel</a>
+        
+        <header>
+            <h1>Choose Your Destination</h1>
+        </header>
+
+        <div class="route-info">
+            <h2>Flying from Seoul</h2>
+            <div class="airport-codes">ICN → ?</div>
+        </div>
+
+        <div class="destination-choice">
+            <h3>Which Bangkok airport?</h3>
+            <div class="airport-options">
+                <a href="#" class="airport-option">
+                    <h4>Suvarnabhumi</h4>
+                    <div class="code">BKK</div>
+                    <div class="description">Main international airport with better connections and more flight options. About 1 hour from venue.</div>
+                </a>
+                <a href="#" class="airport-option">
+                    <h4>Don Mueang</h4>
+                    <div class="code">DMK</div>
+                    <div class="description">Closer to venue (about 30 minutes). Popular with budget airlines and some traditional carriers.</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="recommendation">
+            <h4>Our Recommendation</h4>
+            <p>For flights from Seoul, both airports are well-connected. Korean Air and Thai Airways typically use BKK, while budget carriers like AirAsia often use DMK which is closer to our venue.</p>
+        </div>
+    </div>
+</body>
+</html>
