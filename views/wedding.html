@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xavi & Helen's Wedding</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background-color: #f4eee5;
+            color: #46544f;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        header {
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            font-weight: normal;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .location {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .countdown {
+            background: rgba(70, 84, 79, 0.1);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 3rem;
+        }
+
+        .countdown h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: normal;
+        }
+
+        .rsvp-button {
+            display: inline-block;
+            background-color: #46544f;
+            color: #f4eee5;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease;
+            margin-bottom: 3rem;
+        }
+
+        .rsvp-button:hover {
+            background-color: #5a6860;
+        }
+
+        .wedding-details {
+            background: rgba(70, 84, 79, 0.05);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 3rem;
+        }
+
+        .wedding-details h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .wedding-details p {
+            margin-bottom: 0.5rem;
+        }
+
+        .address {
+            font-style: italic;
+            margin-top: 1rem;
+        }
+
+        nav {
+            margin-top: 2rem;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: #46544f;
+            text-decoration: none;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 0.5rem 1rem;
+            border: 1px solid #46544f;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: #46544f;
+            color: #f4eee5;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .countdown h2 {
+                font-size: 2rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav a {
+                display: block;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Xavi & Helen's Wedding</h1>
+            <p class="subtitle">XAVI & HELEN - BANGKOK, THAILAND</p>
+        </header>
+
+        <div class="countdown">
+            <h2 id="countdown-timer">162 DAYS TO GO!</h2>
+        </div>
+
+        <a href="/wedding/rsvp" class="rsvp-button">RSVP</a>
+
+        <div class="wedding-details">
+            <h3>Wedding Day</h3>
+            <p><strong>January 17, 2026</strong></p>
+            <p><strong>Vows Chapelle</strong></p>
+            <p class="address">Borommaratchachonnani Rd, Sala Thammasop, Thawi Watthana, Bangkok 10170</p>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="/wedding/our-story">Our Story</a></li>
+                <li><a href="/wedding/photos">Photos</a></li>
+                <li><a href="/wedding/qna">Q&A</a></li>
+                <li><a href="/wedding/travel">Travel</a></li>
+                <li><a href="/wedding/things-to-do">Things To Do</a></li>
+                <li><a href="/wedding/registry">Registry</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <script>
+        function updateCountdown() {
+            const weddingDate = new Date('2026-01-17T00:00:00');
+            const now = new Date();
+            const timeDifference = weddingDate - now;
+            
+            if (timeDifference > 0) {
+                const days = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+                document.getElementById('countdown-timer').textContent = `${days} DAYS TO GO!`;
+            } else {
+                document.getElementById('countdown-timer').textContent = 'WE\'RE MARRIED!';
+            }
+        }
+
+        // Update countdown immediately and then every hour
+        updateCountdown();
+        setInterval(updateCountdown, 3600000); // Update every hour
+    </script>
+</body>
+</html>
