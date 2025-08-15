@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSVP - Xavi & Helen's Wedding</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background-color: #f4eee5;
+            color: #46544f;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            color: #46544f;
+            text-decoration: none;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            display: inline-block;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: normal;
+            letter-spacing: 2px;
+        }
+
+        .rsvp-form {
+            background: rgba(70, 84, 79, 0.05);
+            padding: 3rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            color: #46544f;
+            font-weight: normal;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-family: inherit;
+            background-color: #fff;
+            color: #46544f;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #46544f;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 2rem;
+            margin-top: 0.5rem;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        input[type="radio"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .btn {
+            background-color: #46544f;
+            color: #f4eee5;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-family: inherit;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: #5a6860;
+        }
+
+        .note {
+            background: rgba(70, 84, 79, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.1rem;
+            color: #666;
+            margin-top: 2rem;
+        }
+
+        .required {
+            color: #c44569;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .rsvp-form {
+                padding: 2rem;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/wedding" class="back-link">← Back to Wedding</a>
+        
+        <header>
+            <h1>RSVP</h1>
+        </header>
+
+        <form class="rsvp-form" action="/wedding/rsvp" method="POST">
+            <div class="form-group">
+                <label for="name">Full Name <span class="required">*</span></label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address <span class="required">*</span></label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="attendance">Will you be attending? <span class="required">*</span></label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="attending-yes" name="attendance" value="yes" required>
+                        <label for="attending-yes">Yes, I'll be there!</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="attending-no" name="attendance" value="no" required>
+                        <label for="attending-no">Sorry, can't make it</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="guests">Number of Guests (including yourself)</label>
+                <select id="guests" name="guests">
+                    <option value="1">1 person</option>
+                    <option value="2">2 people</option>
+                    <option value="3">3 people</option>
+                    <option value="4">4 people</option>
+                    <option value="5">5+ people</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="dietary">Dietary Restrictions or Allergies</label>
+                <textarea id="dietary" name="dietary" placeholder="Please let us know about any dietary restrictions, allergies, or special requests..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Message for the Couple</label>
+                <textarea id="message" name="message" placeholder="Leave us a message! We'd love to hear from you..."></textarea>
+            </div>
+
+            <button type="submit" class="btn">Submit RSVP</button>
+        </form>
+
+        <div class="note">
+            <p>Please RSVP by <strong>December 1, 2025</strong>. We can't wait to celebrate with you!</p>
+        </div>
+    </div>
+
+    <script>
+        const form = document.querySelector('.rsvp-form');
+        
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Simple form validation
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const attendance = document.querySelector('input[name="attendance"]:checked');
+            
+            if (!name || !email || !attendance) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // For now, just show a success message
+            alert('Thank you for your RSVP! We have received your response.');
+            
+            // In a real implementation, you would submit the form data to a server
+            // form.submit();
+        });
+    </script>
+</body>
+</html>

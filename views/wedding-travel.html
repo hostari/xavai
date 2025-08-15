@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel - Xavi & Helen's Wedding</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background-color: #f4eee5;
+            color: #46544f;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            font-weight: normal;
+            letter-spacing: 2px;
+        }
+
+        .back-link {
+            color: #46544f;
+            text-decoration: none;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            display: inline-block;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .intro {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .region {
+            margin-bottom: 4rem;
+        }
+
+        .region h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #46544f;
+        }
+
+        .airport-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .airport-card {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 200px;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: end;
+        }
+
+        .airport-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-overlay {
+            background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.3));
+            width: 100%;
+            padding: 1.5rem;
+        }
+
+        .airport-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .airport-code {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Airport-specific backgrounds */
+        .jfk { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200"><rect fill="%23b8860b" width="400" height="200"/><g fill="%23fff"><circle cx="100" cy="100" r="30"/><rect x="95" y="70" width="10" height="60"/><rect x="70" y="95" width="60" height="10"/></g><text x="200" y="120" fill="%23fff" font-family="Arial" font-size="24" font-weight="bold">NYC</text></svg>'); }
+        
+        .lga { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200"><rect fill="%234169e1" width="400" height="200"/><g fill="%23fff"><rect x="50" y="80" width="60" height="40"/><rect x="120" y="60" width="60" height="80"/><rect x="190" y="40" width="60" height="120"/></g><text x="280" y="120" fill="%23fff" font-family="Arial" font-size="20" font-weight="bold">NYC</text></svg>'); }
+        
+        .sfo { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200"><rect fill="%23ff6347" width="400" height="200"/><g fill="%23fff"><circle cx="100" cy="100" r="40"/><path d="M100,60 L140,100 L100,140 L60,100 Z"/></g><text x="200" y="120" fill="%23fff" font-family="Arial" font-size="24" font-weight="bold">SF</text></svg>'); }
+        
+        .sjc { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200"><rect fill="%23228b22" width="400" height="200"/><g fill="%23fff"><circle cx="80" cy="100" r="25"/><circle cx="120" cy="100" r="25"/><circle cx="160" cy="100" r="25"/></g><text x="220" y="120" fill="%23fff" font-family="Arial" font-size="20" font-weight="bold">SJC</text></svg>'); }
+        
+        .lax { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200"><rect fill="%23ff1493" width="400" height="200"/><g fill="%23fff"><path d="M50,150 Q100,50 150,150 Q200,50 250,150 Q300,50 350,150"/></g><text x="160" y="120" fill="%23fff" font-family="Arial" font-size="24" font-weight="bold">LA</text></svg>'); }
+        
+        .sea { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200"><rect fill="%232e8b57" width="400" height="200"/><g fill="%23fff"><circle cx="100" cy="60" r="15"/><path d="M85,75 L115,75 L100,100 Z"/><rect x="95" y="100" width="10" height="30"/></g><text x="200" y="120" fill="%23fff" font-family="Arial" font-size="20" font-weight="bold">SEA</text></svg>'); }
+        
+        .yyz { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200"><rect fill="%23dc143c" width="400" height="200"/><g fill="%23fff"><path d="M100,80 L120,120 L80,120 Z M140,80 L160,120 L120,120 Z"/></g><text x="200" y="120" fill="%23fff" font-family="Arial" font-size="20" font-weight="bold">YYZ</text></svg>'); }
+        
+        .germany { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200"><rect fill="%23000" y="0" width="400" height="67"/><rect fill="%23dd0000" y="67" width="400" height="66"/><rect fill="%23ffcc00" y="133" width="400" height="67"/><text x="150" y="120" fill="%23fff" font-family="Arial" font-size="20" font-weight="bold">GERMANY</text></svg>'); }
+        
+        .mnl { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200"><rect fill="%23ce1126" width="400" height="100"/><rect fill="%230038a8" y="100" width="400" height="100"/><g fill="%23fff"><circle cx="100" cy="100" r="30"/><polygon points="100,85 105,95 115,95 107,102 110,112 100,105 90,112 93,102 85,95 95,95"/></g><text x="200" y="120" fill="%23fff" font-family="Arial" font-size="20" font-weight="bold">MNL</text></svg>'); }
+        
+        .hkg { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200"><rect fill="%23de2910" width="400" height="200"/><g fill="%23fff"><polygon points="80,80 85,90 95,90 87,97 90,107 80,100 70,107 73,97 65,90 75,90"/><polygon points="120,60 125,70 135,70 127,77 130,87 120,80 110,87 113,77 105,70 115,70"/><polygon points="140,100 145,110 155,110 147,117 150,127 140,120 130,127 133,117 125,110 135,110"/><polygon points="130,140 135,150 145,150 137,157 140,167 130,160 120,167 123,157 115,150 125,150"/></g><text x="200" y="120" fill="%23fff" font-family="Arial" font-size="20" font-weight="bold">HKG</text></svg>'); }
+        
+        .icn { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200"><rect fill="%23fff" width="400" height="200"/><circle cx="120" cy="100" r="40" fill="%23cd2e3a"/><circle cx="120" cy="100" r="25" fill="%23fff"/><circle cx="120" cy="100" r="15" fill="%230047a0"/><text x="200" y="120" fill="%23000" font-family="Arial" font-size="20" font-weight="bold">ICN</text></svg>'); }
+        
+        .pvg { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200"><rect fill="%23de2910" width="400" height="200"/><g fill="%23ffde00"><polygon points="100,60 105,75 120,75 108,85 113,100 100,90 87,100 92,85 80,75 95,75"/><polygon points="140,80 142,85 147,85 143,88 145,93 140,90 135,93 137,88 133,85 138,85"/><polygon points="140,110 142,115 147,115 143,118 145,123 140,120 135,123 137,118 133,115 138,115"/><polygon points="125,125 127,130 132,130 128,133 130,138 125,135 120,138 122,133 118,130 123,130"/><polygon points="120,95 122,100 127,100 123,103 125,108 120,105 115,108 117,103 113,100 118,100"/></g><text x="200" y="120" fill="%23fff" font-family="Arial" font-size="20" font-weight="bold">PVG</text></svg>'); }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .airport-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .airport-card {
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/wedding" class="back-link">← Back to Wedding</a>
+        
+        <header>
+            <h1>Travel</h1>
+            <p class="intro">Where are you flying from?</p>
+        </header>
+
+        <div class="region">
+            <h2>Asia</h2>
+            <div class="airport-grid">
+                <a href="/mnl-choose" class="airport-card mnl">
+                    <div class="card-overlay">
+                        <div class="airport-name">Manila</div>
+                        <div class="airport-code">Flying from MNL?</div>
+                    </div>
+                </a>
+                <a href="/hkg-choose" class="airport-card hkg">
+                    <div class="card-overlay">
+                        <div class="airport-name">Hong Kong</div>
+                        <div class="airport-code">Flying from HKG?</div>
+                    </div>
+                </a>
+                <a href="/icn-choose" class="airport-card icn">
+                    <div class="card-overlay">
+                        <div class="airport-name">Seoul</div>
+                        <div class="airport-code">Flying from ICN?</div>
+                    </div>
+                </a>
+                <a href="/pvg-choose" class="airport-card pvg">
+                    <div class="card-overlay">
+                        <div class="airport-name">Shanghai</div>
+                        <div class="airport-code">Flying from PVG?</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="region">
+            <h2>North America</h2>
+            <div class="airport-grid">
+                <a href="/jfk-bkk" class="airport-card jfk">
+                    <div class="card-overlay">
+                        <div class="airport-name">New York JFK</div>
+                        <div class="airport-code">Flying from JFK?</div>
+                    </div>
+                </a>
+                <a href="/lga-bkk" class="airport-card lga">
+                    <div class="card-overlay">
+                        <div class="airport-name">New York LaGuardia</div>
+                        <div class="airport-code">Flying from LGA?</div>
+                    </div>
+                </a>
+                <a href="/sfo-bkk" class="airport-card sfo">
+                    <div class="card-overlay">
+                        <div class="airport-name">San Francisco</div>
+                        <div class="airport-code">Flying from SFO?</div>
+                    </div>
+                </a>
+                <a href="/sjc-bkk" class="airport-card sjc">
+                    <div class="card-overlay">
+                        <div class="airport-name">San Jose</div>
+                        <div class="airport-code">Flying from SJC?</div>
+                    </div>
+                </a>
+                <a href="/lax-bkk" class="airport-card lax">
+                    <div class="card-overlay">
+                        <div class="airport-name">Los Angeles</div>
+                        <div class="airport-code">Flying from LAX?</div>
+                    </div>
+                </a>
+                <a href="/sea-bkk" class="airport-card sea">
+                    <div class="card-overlay">
+                        <div class="airport-name">Seattle</div>
+                        <div class="airport-code">Flying from SEA?</div>
+                    </div>
+                </a>
+                <a href="/yyz-bkk" class="airport-card yyz">
+                    <div class="card-overlay">
+                        <div class="airport-name">Toronto</div>
+                        <div class="airport-code">Flying from YYZ?</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="region">
+            <h2>Europe</h2>
+            <div class="airport-grid">
+                <a href="/germany-bkk" class="airport-card germany">
+                    <div class="card-overlay">
+                        <div class="airport-name">Germany</div>
+                        <div class="airport-code">Flying from Germany?</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

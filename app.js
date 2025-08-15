@@ -68,6 +68,94 @@ app.get('/masungi-georeserve', (req, res) => {
   res.sendFile(path.join(process.cwd(), 'views', 'masungi-georeserve.html'));
 });
 
+// Wedding website routes
+app.get('/wedding', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'wedding.html'));
+});
+
+app.get('/wedding/our-story', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'wedding-our-story.html'));
+});
+
+app.get('/wedding/photos', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'wedding-photos.html'));
+});
+
+app.get('/wedding/qna', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'wedding-qna.html'));
+});
+
+app.get('/wedding/travel', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'wedding-travel.html'));
+});
+
+app.get('/wedding/things-to-do', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'wedding-things-to-do.html'));
+});
+
+app.get('/wedding/registry', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'wedding-registry.html'));
+});
+
+app.get('/wedding/rsvp', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'wedding-rsvp.html'));
+});
+
+app.post('/wedding/rsvp', (req, res) => {
+  console.log('RSVP Submission:', req.body);
+  res.json({ status: 'success', message: 'RSVP received successfully!' });
+});
+
+// Flight route pages - North America & Europe (to BKK only)
+app.get('/jfk-bkk', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'jfk-bkk.html'));
+});
+
+app.get('/lga-bkk', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'lga-bkk.html'));
+});
+
+app.get('/sfo-bkk', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'sfo-bkk.html'));
+});
+
+app.get('/sjc-bkk', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'sjc-bkk.html'));
+});
+
+app.get('/lax-bkk', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'lax-bkk.html'));
+});
+
+app.get('/sea-bkk', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'sea-bkk.html'));
+});
+
+app.get('/yyz-bkk', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'yyz-bkk.html'));
+});
+
+app.get('/germany-bkk', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'germany-bkk.html'));
+});
+
+// Flight route pages - Asia (with choice of BKK or DMK)
+app.get('/mnl-choose', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'mnl-choose.html'));
+});
+
+app.get('/hkg-choose', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'hkg-choose.html'));
+});
+
+app.get('/icn-choose', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'icn-choose.html'));
+});
+
+app.get('/pvg-choose', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'pvg-choose.html'));
+});
+
 app.get('/2fa/mscs-phic/value', (req, res) => {
   res.send(authenticator.generateToken(process.env.MSCS_PHIC_2FA_KEY))
 });
