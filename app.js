@@ -103,7 +103,47 @@ app.get('/wedding/rsvp', (req, res) => {
 
 app.post('/wedding/rsvp', (req, res) => {
   console.log('RSVP Submission:', req.body);
-  res.json({ status: 'success', message: 'RSVP received successfully!' });
+  
+  // Extract RSVP data
+  const { searchedName, foundGuest, party, attendance, dietary } = req.body;
+  
+  // Validate required fields
+  if (!foundGuest || !party || !attendance) {
+    return res.status(400).json({ 
+      status: 'error', 
+      message: 'Missing required RSVP information' 
+    });
+  }
+  
+  // Process the RSVP data
+  const rsvpSummary = {
+    submittedAt: new Date().toISOString(),
+    searchedName,
+    foundGuest: foundGuest.name,
+    partyCode: Object.keys(attendance)[0] ? Object.keys(attendance)[0].split('-')[0] : 'unknown',
+    responses: []
+  };
+  
+  // Process each party member's response
+  Object.values(attendance).forEach(guest => {
+    const response = {
+      name: guest.name,
+      attending: guest.status === 'accepted',
+      dietary: dietary && dietary[guest.name] ? dietary[guest.name] : null
+    };
+    rsvpSummary.responses.push(response);
+  });
+  
+  console.log('Processed RSVP:', rsvpSummary);
+  
+  // In a real implementation, you would save this to a database
+  // For now, just log and return success
+  
+  res.json({ 
+    status: 'success', 
+    message: 'RSVP received successfully!',
+    summary: rsvpSummary 
+  });
 });
 
 // Flight route pages - North America (to BKK only)

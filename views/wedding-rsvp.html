@@ -212,6 +212,173 @@
             color: #c44569;
         }
 
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+        }
+
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ddd;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            background-color: #46544f;
+            color: #f4eee5;
+        }
+
+        .step.completed {
+            background-color: #46544f;
+            color: #f4eee5;
+        }
+
+        .form-step {
+            display: block;
+        }
+
+        .form-step.hidden {
+            display: none;
+        }
+
+        .step-content {
+            text-align: center;
+        }
+
+        .step-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #46544f;
+        }
+
+        .step-subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-secondary {
+            background-color: #ddd;
+            color: #46544f;
+        }
+
+        .btn-secondary:hover {
+            background-color: #ccc;
+        }
+
+        .guest-confirmation {
+            margin: 2rem 0;
+        }
+
+        .found-guest {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #46544f;
+            padding: 1rem;
+            background: rgba(70, 84, 79, 0.1);
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .event-details {
+            background: rgba(70, 84, 79, 0.1);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .event-date {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-venue {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .venue-link {
+            color: #46544f;
+            text-decoration: underline;
+        }
+
+        .dress-code {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .party-member {
+            background: rgba(70, 84, 79, 0.05);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .member-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #46544f;
+        }
+
+        .attendance-options {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .dietary-item {
+            background: rgba(70, 84, 79, 0.05);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .dietary-label {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #46544f;
+        }
+
+        .summary {
+            background: rgba(70, 84, 79, 0.1);
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .summary-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-title {
+            font-weight: bold;
+            color: #46544f;
+            margin-bottom: 0.5rem;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
@@ -257,54 +424,95 @@
             </ul>
         </nav>
 
-        <form class="rsvp-form" action="/wedding/rsvp" method="POST">
-            <div class="form-group">
-                <label for="name">Full Name <span class="required">*</span></label>
-                <input type="text" id="name" name="name" required>
-            </div>
+        <!-- Progress Indicator -->
+        <div class="progress-indicator">
+            <div class="step" id="step-indicator-1">1</div>
+            <div class="step" id="step-indicator-2">2</div>
+            <div class="step" id="step-indicator-3">3</div>
+            <div class="step" id="step-indicator-4">4</div>
+            <div class="step" id="step-indicator-5">5</div>
+        </div>
 
-            <div class="form-group">
-                <label for="email">Email Address <span class="required">*</span></label>
-                <input type="email" id="email" name="email" required>
-            </div>
-
-            <div class="form-group">
-                <label for="attendance">Will you be attending? <span class="required">*</span></label>
-                <div class="radio-group">
-                    <div class="radio-option">
-                        <input type="radio" id="attending-yes" name="attendance" value="yes" required>
-                        <label for="attending-yes">Yes, I'll be there!</label>
+        <!-- Multi-step Form Container -->
+        <div class="rsvp-form">
+            <!-- Step 1: Guest Lookup -->
+            <div class="form-step" id="step-1">
+                <div class="step-content">
+                    <h2 class="step-title">Xavi & Helen's Wedding</h2>
+                    <p class="step-subtitle">If you're responding for you and a guest (or your family), you'll be able to RSVP for your entire group.</p>
+                    
+                    <div class="form-group">
+                        <label for="guest-name">Full Name <span class="required">*</span></label>
+                        <input type="text" id="guest-name" name="guest-name" required>
                     </div>
-                    <div class="radio-option">
-                        <input type="radio" id="attending-no" name="attendance" value="no" required>
-                        <label for="attending-no">Sorry, can't make it</label>
+                    
+                    <button type="button" class="btn" onclick="findInvitation()">Find Your Invitation</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Guest Confirmation -->
+            <div class="form-step hidden" id="step-2">
+                <div class="step-content">
+                    <h2 class="step-title">Guest Confirmation</h2>
+                    <p class="step-subtitle">We've found you in the guest list. Please confirm your name below to continue with your RSVP.</p>
+                    
+                    <div class="guest-confirmation">
+                        <div id="found-guest-name" class="found-guest"></div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="button" class="btn" onclick="nextStep(3)">Continue</button>
+                        <button type="button" class="btn btn-secondary" onclick="searchAgain()">Search Again</button>
                     </div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="guests">Number of Guests (including yourself)</label>
-                <select id="guests" name="guests">
-                    <option value="1">1 person</option>
-                    <option value="2">2 people</option>
-                    <option value="3">3 people</option>
-                    <option value="4">4 people</option>
-                    <option value="5">5+ people</option>
-                </select>
+            <!-- Step 3: Event Attendance -->
+            <div class="form-step hidden" id="step-3">
+                <div class="step-content">
+                    <h2 class="step-title">Wedding Day</h2>
+                    <div class="event-details">
+                        <p class="event-date">Saturday, January 17, 2026</p>
+                        <p class="event-venue">Vows Chapelle <a href="#" class="venue-link">View Full Address</a></p>
+                        <p class="dress-code">Cocktail</p>
+                    </div>
+                    
+                    <div id="party-attendance" class="party-list">
+                        <!-- Party members will be populated here -->
+                    </div>
+                    
+                    <button type="button" class="btn" onclick="nextStep(4)">Continue</button>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="dietary">Dietary Restrictions or Allergies</label>
-                <textarea id="dietary" name="dietary" placeholder="Please let us know about any dietary restrictions, allergies, or special requests..."></textarea>
+            <!-- Step 4: Dietary Restrictions -->
+            <div class="form-step hidden" id="step-4">
+                <div class="step-content">
+                    <h2 class="step-title">Dietary Information</h2>
+                    <p class="step-subtitle">Any food allergens/dietary restrictions?</p>
+                    
+                    <div id="dietary-questions" class="dietary-list">
+                        <!-- Dietary questions will be populated here -->
+                    </div>
+                    
+                    <button type="button" class="btn" onclick="nextStep(5)">Continue</button>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="message">Message for the Couple</label>
-                <textarea id="message" name="message" placeholder="Leave us a message! We'd love to hear from you..."></textarea>
+            <!-- Step 5: Final Confirmation -->
+            <div class="form-step hidden" id="step-5">
+                <div class="step-content">
+                    <h2 class="step-title">Final Confirmation</h2>
+                    <p class="step-subtitle">Last step! Send your RSVP to Xavi & Helen's Wedding</p>
+                    
+                    <div id="rsvp-summary" class="summary">
+                        <!-- Summary will be populated here -->
+                    </div>
+                    
+                    <button type="button" class="btn" onclick="submitRSVP()">Send RSVP</button>
+                </div>
             </div>
-
-            <button type="submit" class="btn">Submit RSVP</button>
-        </form>
+        </div>
 
         <div class="note">
             <p>Please RSVP by <strong>December 1, 2025</strong>. We can't wait to celebrate with you!</p>
@@ -329,27 +537,274 @@
         updateCountdown();
         setInterval(updateCountdown, 3600000); // Update every hour
 
-        const form = document.querySelector('.rsvp-form');
+        // Multi-step form variables
+        let currentStep = 1;
+        let currentParty = null;
+        let rsvpData = {};
         
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
+        // Mock guest database with party codes
+        const guestList = {
+            "PARTY001": [
+                { name: "John Smith", id: "guest001" },
+                { name: "Jane Smith", id: "guest002" },
+                { name: "Emily Smith", id: "guest003" }
+            ],
+            "PARTY002": [
+                { name: "Michael Johnson", id: "guest004" },
+                { name: "Sarah Johnson", id: "guest005" }
+            ],
+            "PARTY003": [
+                { name: "David Chen", id: "guest006" },
+                { name: "Lisa Chen", id: "guest007" },
+                { name: "Tommy Chen", id: "guest008" },
+                { name: "Sophie Chen", id: "guest009" }
+            ],
+            "PARTY004": [
+                { name: "Robert Williams", id: "guest010" }
+            ],
+            "PARTY005": [
+                { name: "Maria Garcia", id: "guest011" },
+                { name: "Carlos Garcia", id: "guest012" }
+            ],
+            "PARTY006": [
+                { name: "Xavi Ablaza", id: "guest013" },
+                { name: "Helen Chongviriyaphan", id: "guest014" }
+            ]
+        };
+        
+        // Initialize form
+        updateStepIndicator(1);
+        
+        function updateStepIndicator(step) {
+            // Update visual indicator
+            for (let i = 1; i <= 5; i++) {
+                const indicator = document.getElementById(`step-indicator-${i}`);
+                indicator.classList.remove('active', 'completed');
+                
+                if (i < step) {
+                    indicator.classList.add('completed');
+                } else if (i === step) {
+                    indicator.classList.add('active');
+                }
+            }
+        }
+        
+        function showStep(step) {
+            // Hide all steps
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById(`step-${i}`).classList.add('hidden');
+            }
             
-            // Simple form validation
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const attendance = document.querySelector('input[name="attendance"]:checked');
+            // Show current step
+            document.getElementById(`step-${step}`).classList.remove('hidden');
+            currentStep = step;
+            updateStepIndicator(step);
+        }
+        
+        function findInvitation() {
+            const guestName = document.getElementById('guest-name').value.trim();
             
-            if (!name || !email || !attendance) {
-                alert('Please fill in all required fields.');
+            if (!guestName) {
+                alert('Please enter your full name.');
                 return;
             }
             
-            // For now, just show a success message
-            alert('Thank you for your RSVP! We have received your response.');
+            // Find guest in party list
+            let foundParty = null;
+            let foundGuest = null;
             
-            // In a real implementation, you would submit the form data to a server
-            // form.submit();
-        });
+            for (const [partyCode, guests] of Object.entries(guestList)) {
+                const guest = guests.find(g => 
+                    g.name.toLowerCase().includes(guestName.toLowerCase()) ||
+                    guestName.toLowerCase().includes(g.name.toLowerCase())
+                );
+                
+                if (guest) {
+                    foundParty = partyCode;
+                    foundGuest = guest;
+                    break;
+                }
+            }
+            
+            if (foundGuest) {
+                currentParty = foundParty;
+                rsvpData.searchedName = guestName;
+                rsvpData.foundGuest = foundGuest;
+                rsvpData.party = guestList[foundParty];
+                
+                // Display found guest
+                document.getElementById('found-guest-name').textContent = foundGuest.name;
+                
+                showStep(2);
+            } else {
+                alert('Guest not found. Please check the spelling of your name or contact the couple.');
+            }
+        }
+        
+        function searchAgain() {
+            document.getElementById('guest-name').value = '';
+            showStep(1);
+        }
+        
+        function nextStep(step) {
+            if (step === 3) {
+                // Generate attendance form for party
+                generateAttendanceForm();
+            } else if (step === 4) {
+                // Collect attendance data and generate dietary form
+                if (collectAttendanceData()) {
+                    generateDietaryForm();
+                } else {
+                    return; // Don't proceed if validation fails
+                }
+            } else if (step === 5) {
+                // Collect dietary data and generate summary
+                collectDietaryData();
+                generateSummary();
+            }
+            
+            showStep(step);
+        }
+        
+        function generateAttendanceForm() {
+            const container = document.getElementById('party-attendance');
+            container.innerHTML = '';
+            
+            rsvpData.party.forEach(guest => {
+                const memberDiv = document.createElement('div');
+                memberDiv.className = 'party-member';
+                memberDiv.innerHTML = `
+                    <div class="member-name">${guest.name}</div>
+                    <div class="attendance-options">
+                        <div class="radio-option">
+                            <input type="radio" id="attending-${guest.id}-yes" name="attendance-${guest.id}" value="accepted">
+                            <label for="attending-${guest.id}-yes">Accepted</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="attending-${guest.id}-no" name="attendance-${guest.id}" value="declined">
+                            <label for="attending-${guest.id}-no">Decline</label>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(memberDiv);
+            });
+        }
+        
+        function collectAttendanceData() {
+            rsvpData.attendance = {};
+            let hasResponse = false;
+            
+            rsvpData.party.forEach(guest => {
+                const attendanceChoice = document.querySelector(`input[name="attendance-${guest.id}"]:checked`);
+                if (attendanceChoice) {
+                    rsvpData.attendance[guest.id] = {
+                        name: guest.name,
+                        status: attendanceChoice.value
+                    };
+                    hasResponse = true;
+                }
+            });
+            
+            if (!hasResponse) {
+                alert('Please select attendance for at least one party member.');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        function generateDietaryForm() {
+            const container = document.getElementById('dietary-questions');
+            container.innerHTML = '';
+            
+            // Only show dietary questions for guests who are attending
+            Object.values(rsvpData.attendance)
+                .filter(guest => guest.status === 'accepted')
+                .forEach(guest => {
+                    const dietaryDiv = document.createElement('div');
+                    dietaryDiv.className = 'dietary-item';
+                    dietaryDiv.innerHTML = `
+                        <div class="dietary-label">${guest.name}:</div>
+                        <textarea id="dietary-${guest.name.replace(/\s+/g, '-')}" 
+                                  name="dietary-${guest.name.replace(/\s+/g, '-')}" 
+                                  placeholder="Enter any food allergies or dietary restrictions..."
+                                  rows="3"></textarea>
+                    `;
+                    container.appendChild(dietaryDiv);
+                });
+        }
+        
+        function collectDietaryData() {
+            rsvpData.dietary = {};
+            
+            Object.values(rsvpData.attendance)
+                .filter(guest => guest.status === 'accepted')
+                .forEach(guest => {
+                    const dietaryField = document.getElementById(`dietary-${guest.name.replace(/\s+/g, '-')}`);
+                    if (dietaryField) {
+                        rsvpData.dietary[guest.name] = dietaryField.value.trim();
+                    }
+                });
+        }
+        
+        function generateSummary() {
+            const container = document.getElementById('rsvp-summary');
+            
+            const attending = Object.values(rsvpData.attendance).filter(g => g.status === 'accepted');
+            const declining = Object.values(rsvpData.attendance).filter(g => g.status === 'declined');
+            
+            let summaryHTML = '<div class="summary-section">';
+            summaryHTML += '<div class="summary-title">Event Details:</div>';
+            summaryHTML += 'Saturday, January 17, 2026 at Vows Chapelle (Cocktail attire)';
+            summaryHTML += '</div>';
+            
+            if (attending.length > 0) {
+                summaryHTML += '<div class="summary-section">';
+                summaryHTML += '<div class="summary-title">Attending:</div>';
+                attending.forEach(guest => {
+                    summaryHTML += `${guest.name}<br>`;
+                    if (rsvpData.dietary[guest.name]) {
+                        summaryHTML += `<small>Dietary: ${rsvpData.dietary[guest.name]}</small><br>`;
+                    }
+                });
+                summaryHTML += '</div>';
+            }
+            
+            if (declining.length > 0) {
+                summaryHTML += '<div class="summary-section">';
+                summaryHTML += '<div class="summary-title">Not Attending:</div>';
+                declining.forEach(guest => {
+                    summaryHTML += `${guest.name}<br>`;
+                });
+                summaryHTML += '</div>';
+            }
+            
+            container.innerHTML = summaryHTML;
+        }
+        
+        async function submitRSVP() {
+            try {
+                const response = await fetch('/wedding/rsvp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(rsvpData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert('Thank you! Your RSVP has been submitted successfully.');
+                    // Reset form or redirect as needed
+                } else {
+                    alert('Error submitting RSVP. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error submitting RSVP. Please try again.');
+            }
+        }
     </script>
 </body>
 </html>
