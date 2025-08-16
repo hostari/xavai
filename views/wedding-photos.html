@@ -17,12 +17,52 @@
             color: #46544f;
             line-height: 1.6;
             min-height: 100vh;
+            padding-top: 80px;
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 2rem;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #f4eee5;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav a {
+            color: #46544f;
+            text-decoration: none;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 0.5rem 1rem;
+            border: 1px solid #46544f;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: #46544f;
+            color: #f4eee5;
         }
 
         .back-link {
@@ -81,8 +121,19 @@
     </style>
 </head>
 <body>
+    <nav>
+        <ul>
+            <li><a href="/wedding">Home</a></li>
+            <li><a href="/wedding/our-story">Our Story</a></li>
+            <li><a href="/wedding/photos">Photos</a></li>
+            <li><a href="/wedding/qna">Q&A</a></li>
+            <li><a href="/wedding/travel">Travel</a></li>
+            <li><a href="/wedding/things-to-do">Things To Do</a></li>
+            <li><a href="/wedding/registry">Registry</a></li>
+            <li><a href="/wedding/rsvp">RSVP</a></li>
+        </ul>
+    </nav>
     <div class="container">
-        <a href="/wedding" class="back-link">← Back to Wedding</a>
         
         <header>
             <h1>Photos</h1>
