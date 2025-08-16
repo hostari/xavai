@@ -19,7 +19,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            padding-top: 80px;
+            padding-top: 20px;
         }
 
         .container {
@@ -31,6 +31,7 @@
 
         header {
             margin-bottom: 3rem;
+            padding-top: 2rem;
         }
 
         h1 {
@@ -54,15 +55,17 @@
 
         .countdown {
             background: rgba(70, 84, 79, 0.1);
-            padding: 2rem;
+            padding: 1rem;
             border-radius: 10px;
-            margin-bottom: 3rem;
+            margin-bottom: 1.5rem;
         }
 
         .countdown h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
             font-weight: normal;
+            text-transform: none;
+            letter-spacing: 0;
         }
 
         .rsvp-button {
@@ -105,7 +108,7 @@
         }
 
         nav {
-            margin-top: 2rem;
+            margin-top: 1rem;
         }
 
         nav ul {
@@ -113,13 +116,13 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 2rem;
+            gap: 1rem;
         }
 
         nav a {
             color: #46544f;
             text-decoration: none;
-            font-size: 1rem;
+            font-size: 0.9rem;
             letter-spacing: 0.5px;
             text-transform: uppercase;
             padding: 0.5rem 1rem;
@@ -162,25 +165,16 @@
     <div class="container">
         <header>
             <h1>Xavi & Helen's Wedding</h1>
-            <p class="subtitle">BANGKOK, THAILAND</p>
+            <p class="subtitle">BANGKOK, THAILAND • JANUARY 17, 2026</p>
         </header>
 
         <div class="countdown">
             <h2 id="countdown-timer">162 DAYS TO GO!</h2>
         </div>
 
-        <a href="/wedding/rsvp" class="rsvp-button">RSVP</a>
-
-        <div class="wedding-details">
-            <img src="/vows-chapelle.webp" alt="Vows Chapelle" style="width: 100%; max-width: 600px; height: 300px; object-fit: cover; border-radius: 10px; margin-bottom: 1.5rem;">
-            <h3>Wedding Day</h3>
-            <p><strong>January 17, 2026</strong></p>
-            <p><strong>Vows Chapelle</strong></p>
-            <p class="address">Borommaratchachonnani Rd, Sala Thammasop, Thawi Watthana, Bangkok 10170</p>
-        </div>
-
-        <nav style="position: fixed; top: 0; left: 0; right: 0; background-color: #f4eee5; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 1000; margin-top: 0;">
-            <ul style="max-width: 800px; margin: 0 auto; padding: 0 2rem;">
+        <nav>
+            <ul>
+                <li><a href="/wedding/rsvp">RSVP</a></li>
                 <li><a href="/wedding/our-story">Our Story</a></li>
                 <li><a href="/wedding/photos">Photos</a></li>
                 <li><a href="/wedding/qna">Q&A</a></li>
@@ -189,6 +183,14 @@
                 <li><a href="/wedding/registry">Registry</a></li>
             </ul>
         </nav>
+
+        <div class="wedding-details">
+            <img src="/vows-chapelle.webp" alt="Vows Chapelle" style="width: 100%; max-width: 600px; height: 300px; object-fit: cover; border-radius: 10px; margin-bottom: 1.5rem;">
+            <h3>Wedding Day</h3>
+            <p><strong>January 17, 2026</strong></p>
+            <p><strong>Vows Chapelle</strong></p>
+            <p class="address">Borommaratchachonnani Rd, Sala Thammasop, Thawi Watthana, Bangkok 10170</p>
+        </div>
     </div>
 
     <script>
