@@ -29,6 +29,7 @@
 
         nav {
             margin-top: 1rem;
+            margin-bottom: 2rem;
         }
 
         nav ul {
@@ -70,12 +71,12 @@
 
         header {
             text-align: center;
-            margin-bottom: 3rem;
+            padding-bottom: 1rem;
         }
 
         h1 {
             font-size: 3rem;
-            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
             font-weight: normal;
             letter-spacing: 2px;
         }
@@ -85,8 +86,32 @@
             font-size: 4rem;
             font-weight: 600;
             color: #46544f;
-            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding-bottom: 1rem;
+        }
+
+        .location {
+            font-size: 1.1rem;
+            padding-bottom: 2rem;
+        }
+
+        .countdown {
+            padding-bottom: 2rem;
+        }
+
+        #countdown-timer {
+            font-size: 1.2rem;
+            padding-bottom: 0.5rem;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .story-content {
@@ -127,8 +152,10 @@
 <body>
     <div class="container">
         <header>
-            <h2 class="wedding-title">Our Wedding</h2>
-            <h1>Our Story</h1>
+            <h2 class="wedding-title">our wedding</h2>
+            <h1>XAVI & HELEN</h1>
+            <p class="subtitle">BANGKOK, THAILAND • JANUARY 17, 2026</p>
+            <p id="countdown-timer">162 DAYS TO GO!</p>
         </header>
 
         <nav>
@@ -149,5 +176,24 @@
             <p>We're working on sharing our story with you. Check back soon!</p>
         </div>
     </div>
+
+    <script>
+        function updateCountdown() {
+            const weddingDate = new Date('2026-01-17T00:00:00');
+            const now = new Date();
+            const timeDifference = weddingDate - now;
+            
+            if (timeDifference > 0) {
+                const days = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+                document.getElementById('countdown-timer').textContent = `${days} DAYS TO GO!`;
+            } else {
+                document.getElementById('countdown-timer').textContent = 'WE\'RE MARRIED!';
+            }
+        }
+
+        // Update countdown immediately and then every hour
+        updateCountdown();
+        setInterval(updateCountdown, 3600000); // Update every hour
+    </script>
 </body>
 </html>
