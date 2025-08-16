@@ -2,108 +2,82 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
+## Overview
 
-**xavai** is a LINE bot designed as a social interaction concierge that helps navigate real-world relationships. The bot:
-- Processes Instagram chat data and social interaction notes  
-- Uses a 128k token context to understand relationship dynamics
-- Integrates with LM Studio running locally for AI processing
-- Provides concierge-like assistance for social situations
+xavai is a LINE bot that functions as a social interaction concierge. It ingests social data (Instagram chats, notes) and uses LM Studio running locally for AI processing with 128k token context. The project also includes a wedding website with flight booking integration and various utility tools.
+
+## Commands
+
+### Development
+- **Start server**: `node app.js`
+- **Install dependencies**: `npm install`
+
+### Docker
+- **Build image**: `docker build -t xavai .`
+- **Run container**: `docker run -p 3000:3000 xavai`
+
+### Data Processing Scripts
+- **Chunk large text files**: `python chunk_text.py` (splits text into 8k token chunks for processing)
+- **Count tokens in files**: `python count_summary_tokens.py`
+- **Combine summaries**: `./combine_summaries.sh` (combines all chunk summaries into single file)
 
 ## Architecture
 
 ### Core Components
 
-**Main Application (`app.js`)**
-- Express.js server handling LINE webhook events
-- LM Studio integration via HTTP API at `localhost:1234`
-- Uses `deepseek-r1-distill-qwen-7b` model
-- Bot responds only when mentioned by name (`@BOT_NAME`)
-- Supports echo mode and think tag removal
-
-**Data Processing Pipeline**
-- `chunk_text.py`: Splits large conversation files into manageable chunks (~8k tokens each)
-- `combine_summaries.sh`: Merges chunk summaries into unified context
-- `count_summary_tokens.py`: Token counting utility using GPT-4 tokenizer
-
-**Additional Features**
-- Travel integration via Duffel API
+**Express.js Web Server** (`app.js`):
+- LINE bot webhook handler at `/line/webhook`
+- Wedding website routes (`/wedding/*`)
+- Flight booking pages for different airports
 - 2FA token generator for MSCS PHIC
 - Queue management system for restaurants
-- Static file serving for various interfaces
+- Static file serving from `public/` and `views/`
 
-### Key Integration Points
+**LINE Bot Integration**:
+- Uses `@line/bot-sdk` for messaging API
+- Processes messages mentioning the bot by name
+- Integrates with LM Studio for AI responses
+- Supports echo mode for testing
 
-**LM Studio Server**
-- Runs locally on port 1234
-- Expects host configured via `LM_STUDIO_HOST` environment variable
-- Processes user messages with conversation context
+**LM Studio Integration**:
+- Local AI server running on port 1234
+- Uses `deepseek-r1-distill-qwen-7b` model
+- Handles conversation context up to 128k tokens
+- Configurable think tag removal and logging
 
-**LINE Bot Integration**
-- Webhook endpoint: `/line/webhook`
-- Requires `LINE_CHANNEL_SECRET` and `LINE_CHANNEL_ACCESS_TOKEN`
-- Only responds to messages containing bot's mention
+**Data Processing Pipeline**:
+- `chunk_text.py`: Splits large conversation files into processable chunks
+- Uses tiktoken for accurate token counting
+- Generates summaries for each chunk via LM Studio
+- `combine_summaries.sh`: Merges all summaries back together
 
-## Environment Configuration
+### Dependencies
+- **@line/bot-sdk**: LINE messaging platform integration
+- **@duffel/api**: Flight booking API integration
+- **express**: Web framework
+- **axios**: HTTP client for API calls
+- **authenticator**: 2FA token generation
 
-Required environment variables:
-- `LINE_CHANNEL_SECRET`: LINE bot webhook validation
-- `LINE_CHANNEL_ACCESS_TOKEN`: LINE messaging API access
-- `BOT_NAME`: Bot mention trigger (without @ symbol)
-- `LM_STUDIO_HOST`: LM Studio server hostname
-- `DUFFEL_TOKEN`: Travel booking API access
-- `MSCS_PHIC_2FA_KEY`: 2FA token generation
+### Environment Variables
+- `LINE_CHANNEL_SECRET`: LINE bot channel secret
+- `LINE_CHANNEL_ACCESS_TOKEN`: LINE bot access token
+- `DUFFEL_TOKEN`: Flight booking API token
+- `LM_STUDIO_HOST`: LM Studio server host (default: localhost)
+- `BOT_NAME`: Bot mention name for LINE messages
+- `BOT_ECHO`: Enable echo mode (true/false)
+- `LOG_LM_STUDIO`: Enable LM Studio request logging
+- `REMOVE_THINK_TAGS`: Strip AI thinking tags from responses
+- `MSCS_PHIC_2FA_KEY`: 2FA secret for token generation
 
-Optional configuration:
-- `BOT_ECHO`: Enable echo mode (bypasses LM Studio)
-- `LOG_LM_STUDIO`: Enable LM Studio request/response logging
-- `REMOVE_THINK_TAGS`: Strip `<think>` tags from responses
+### File Structure
+- `views/`: HTML templates for wedding website and booking pages
+- `public/`: Static assets (images, airport photos, QR codes)
+- Python scripts for text processing and summarization
+- Docker configuration for containerized deployment
 
-## Development Commands
-
-**Start Application**
-```bash
-node app.js
-```
-
-**Install Dependencies**
-```bash
-npm install
-```
-
-**Docker Deployment**
-```bash
-docker build -t xavai .
-docker run -p 3000:3000 xavai
-```
-
-**Data Processing**
-```bash
-# Split conversation file into chunks
-python chunk_text.py
-
-# Generate summaries for specific chunk range
-python -c "from chunk_text import create_summaries_range; create_summaries_range(1, 10)"
-
-# Combine all summaries
-./combine_summaries.sh
-
-# Count tokens in summary file
-python count_summary_tokens.py
-```
-
-## File Structure Context
-
-- `public/`: Static assets including QR codes for various payment systems
-- `views/`: HTML templates for web interfaces (AutoQ queue system, Masungi reservation)
-- `chotikai*.txt`: Conversation data files and processed chunks/summaries
-- `mise.toml`: Development environment configuration
-
-## API Endpoints
-
-- `GET /`: Basic health check
-- `GET /up`: Service status endpoint
-- `POST /line/webhook`: LINE bot message processing
-- `GET /autoq`: Restaurant queue management interface
-- `GET /masungi-georeserve`: Reservation system
-- `GET /2fa/mscs-phic`: 2FA token generator with auto-refresh
+### Key Features
+- **Wedding Website**: Multi-page site with RSVP, travel info, photo gallery
+- **Flight Integration**: Airport-specific booking pages with Duffel API
+- **Restaurant Queue**: Digital queue system for Katsu Midori Thailand
+- **Social AI**: Contextual conversation processing for relationship insights
+- **2FA Service**: Time-based token generation with web interface
