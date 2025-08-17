@@ -6,6 +6,8 @@ import crypto from 'crypto'
 import path from 'path'
 import { Duffel } from '@duffel/api'
 import * as authenticator from 'authenticator'
+import pkg from 'pg'
+const { Pool } = pkg
 
 const duffel = new Duffel({
   token: process.env.DUFFEL_TOKEN,
@@ -41,6 +43,12 @@ const config = {
 // create LINE SDK client
 const client = new line.messagingApi.MessagingApiClient({
   channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN
+});
+
+// Database connection
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
 const app = express();
@@ -101,49 +109,110 @@ app.get('/wedding/rsvp', (req, res) => {
   res.sendFile(path.join(process.cwd(), 'views', 'wedding-rsvp.html'));
 });
 
-app.post('/wedding/rsvp', (req, res) => {
-  console.log('RSVP Submission:', req.body);
-  
-  // Extract RSVP data
-  const { searchedName, foundGuest, party, attendance, dietary } = req.body;
-  
-  // Validate required fields
-  if (!foundGuest || !party || !attendance) {
-    return res.status(400).json({ 
-      status: 'error', 
-      message: 'Missing required RSVP information' 
+app.get('/wedding/rsvp-success', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'wedding-rsvp-success.html'));
+});
+
+app.post('/wedding/rsvp', async (req, res) => {
+  try {
+    console.log('RSVP Submission:', req.body);
+    
+    const { 
+      searchedName, 
+      foundGuest, 
+      party, 
+      attendance, 
+      dietary,
+      guestInfo = {} // Additional guest information
+    } = req.body;
+    
+    // Validate required fields
+    if (!foundGuest || !party || !attendance) {
+      return res.status(400).json({ 
+        status: 'error', 
+        message: 'Missing required RSVP information' 
+      });
+    }
+    
+    // Insert RSVP responses into database
+    const client = await pool.connect();
+    const insertedResponses = [];
+    
+    try {
+      await client.query('BEGIN');
+      
+      // Process each party member's response
+      for (const [guestId, guest] of Object.entries(attendance)) {
+        const [firstName, ...lastNameParts] = guest.name.split(' ');
+        const lastName = lastNameParts.join(' ');
+        
+        const insertQuery = `
+          INSERT INTO rsvp_responses (
+            invited_by, first_name, last_name, nickname, country, 
+            phone, email, travel_party, travel_origin, party_code, 
+            total_guests, response, dietary_restrictions
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+          RETURNING *
+        `;
+        
+        const values = [
+          guestInfo.invitedBy || null,
+          firstName,
+          lastName || '',
+          guestInfo.nickname || null,
+          guestInfo.country || null,
+          guestInfo.phone || null,
+          guestInfo.email || null,
+          guestInfo.travelParty || null,
+          guestInfo.travelOrigin || null,
+          foundGuest.id?.split('guest')[0] + 'PARTY' || 'UNKNOWN',
+          party.length,
+          guest.status,
+          dietary && dietary[guest.name] ? dietary[guest.name] : null
+        ];
+        
+        const result = await client.query(insertQuery, values);
+        insertedResponses.push(result.rows[0]);
+      }
+      
+      await client.query('COMMIT');
+      
+      // Create response summary
+      const rsvpSummary = {
+        submittedAt: new Date().toISOString(),
+        searchedName,
+        foundGuest: foundGuest.name,
+        partyCode: foundGuest.id?.split('guest')[0] + 'PARTY' || 'UNKNOWN',
+        responses: Object.values(attendance).map(guest => ({
+          name: guest.name,
+          attending: guest.status === 'accepted',
+          dietary: dietary && dietary[guest.name] ? dietary[guest.name] : null
+        }))
+      };
+      
+      console.log('Processed RSVP:', rsvpSummary);
+      
+      res.json({ 
+        status: 'success', 
+        message: 'RSVP received successfully!',
+        summary: rsvpSummary,
+        redirectUrl: '/wedding/rsvp-success'
+      });
+      
+    } catch (dbError) {
+      await client.query('ROLLBACK');
+      throw dbError;
+    } finally {
+      client.release();
+    }
+    
+  } catch (error) {
+    console.error('Error processing RSVP:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to process RSVP. Please try again.'
     });
   }
-  
-  // Process the RSVP data
-  const rsvpSummary = {
-    submittedAt: new Date().toISOString(),
-    searchedName,
-    foundGuest: foundGuest.name,
-    partyCode: Object.keys(attendance)[0] ? Object.keys(attendance)[0].split('-')[0] : 'unknown',
-    responses: []
-  };
-  
-  // Process each party member's response
-  Object.values(attendance).forEach(guest => {
-    const response = {
-      name: guest.name,
-      attending: guest.status === 'accepted',
-      dietary: dietary && dietary[guest.name] ? dietary[guest.name] : null
-    };
-    rsvpSummary.responses.push(response);
-  });
-  
-  console.log('Processed RSVP:', rsvpSummary);
-  
-  // In a real implementation, you would save this to a database
-  // For now, just log and return success
-  
-  res.json({ 
-    status: 'success', 
-    message: 'RSVP received successfully!',
-    summary: rsvpSummary 
-  });
 });
 
 // Flight route pages - North America (to BKK only)
