@@ -286,14 +286,14 @@ app.get('/2fa/mscs-phic', (_req, res) => {
   `);
 });
 
-app.get('/pasabuy/202508041330', (_req, res) => {
+app.get('/pasabuy/SK202508041330', (_req, res) => {
   res.send(`
     <!DOCTYPE html>
     <html lang="en">
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Pasabuy Tracking - 202508041330</title>
+      <title>Pasabuy Tracking - SK202508041330</title>
       <style>
         * {
           margin: 0;
@@ -496,7 +496,7 @@ app.get('/pasabuy/202508041330', (_req, res) => {
       <div class="container" data-controller="pasabuy-tracker">
         <div class="header">
           <div class="tracking-id">Tracking ID</div>
-          <div class="title">202508041330</div>
+          <div class="title">SK202508041330</div>
         </div>
 
         <div class="status-section" data-pasabuy-tracker-target="status">
