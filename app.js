@@ -286,6 +286,258 @@ app.get('/2fa/mscs-phic', (_req, res) => {
   `);
 });
 
+app.get('/pasabuy/202508041330', (_req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Pasabuy Tracking - 202508041330</title>
+      <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        body {
+          font-family: 'Georgia', 'Times New Roman', serif;
+          background-color: #f4eee5;
+          color: #46544f;
+          line-height: 1.6;
+          min-height: 100vh;
+          padding: 2rem;
+        }
+
+        .container {
+          max-width: 800px;
+          margin: 0 auto;
+          background: white;
+          border-radius: 15px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+          padding: 2rem;
+        }
+
+        .header {
+          text-align: center;
+          margin-bottom: 2rem;
+          padding-bottom: 1rem;
+          border-bottom: 2px solid #e5ddd4;
+        }
+
+        .tracking-id {
+          font-size: 1.2rem;
+          color: #8b7355;
+          font-weight: normal;
+          margin-bottom: 0.5rem;
+        }
+
+        .title {
+          font-size: 2.5rem;
+          color: #46544f;
+          margin-bottom: 1rem;
+          font-weight: bold;
+        }
+
+        .status-section {
+          background: #f8f6f3;
+          border-radius: 10px;
+          padding: 2rem;
+          margin-bottom: 2rem;
+          text-align: center;
+        }
+
+        .status-icon {
+          font-size: 4rem;
+          margin-bottom: 1rem;
+        }
+
+        .status-text {
+          font-size: 1.5rem;
+          color: #46544f;
+          font-weight: bold;
+          margin-bottom: 0.5rem;
+        }
+
+        .status-detail {
+          color: #8b7355;
+          font-size: 1rem;
+        }
+
+        .payment-section {
+          opacity: 0;
+          transform: translateY(20px);
+          transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .payment-section.show {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        .payment-title {
+          font-size: 1.8rem;
+          color: #46544f;
+          text-align: center;
+          margin-bottom: 1rem;
+          font-weight: bold;
+        }
+
+        .payment-amount {
+          font-size: 2rem;
+          color: #d4572a;
+          text-align: center;
+          margin-bottom: 2rem;
+          font-weight: bold;
+        }
+
+        .qr-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          gap: 1.5rem;
+          margin-top: 1rem;
+        }
+
+        .qr-item {
+          text-align: center;
+          background: white;
+          padding: 1rem;
+          border-radius: 10px;
+          box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+          transition: transform 0.3s ease;
+        }
+
+        .qr-item:hover {
+          transform: translateY(-5px);
+        }
+
+        .qr-image {
+          width: 100px;
+          height: 100px;
+          object-fit: contain;
+          border-radius: 8px;
+          margin-bottom: 0.5rem;
+        }
+
+        .qr-label {
+          font-size: 0.9rem;
+          color: #8b7355;
+          font-weight: bold;
+          text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+          body {
+            padding: 1rem;
+          }
+          
+          .container {
+            padding: 1.5rem;
+          }
+          
+          .title {
+            font-size: 2rem;
+          }
+          
+          .qr-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+          }
+        }
+      </style>
+      <script type="module">
+        import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js"
+        window.Stimulus = Application.start()
+
+        Stimulus.register("pasabuy-tracker", class extends Controller {
+          static targets = ["status", "statusIcon", "statusText", "statusDetail", "paymentSection"]
+          
+          connect() {
+            this.checkStatus()
+            // Check status every 30 seconds
+            this.statusTimer = setInterval(() => this.checkStatus(), 30000)
+          }
+
+          disconnect() {
+            if (this.statusTimer) {
+              clearInterval(this.statusTimer)
+            }
+          }
+
+          checkStatus() {
+            const targetDate = new Date('2025-08-04T13:30:00+08:00')
+            const now = new Date()
+            
+            if (now >= targetDate) {
+              // Show "waiting to be processed" status
+              this.statusIconTarget.textContent = '📦'
+              this.statusTextTarget.textContent = '2 boxes are waiting to be processed'
+              this.statusDetailTarget.textContent = 'Ready for payment and collection'
+              this.statusTarget.style.background = '#e8f5e8'
+              
+              // Show payment section
+              this.paymentSectionTarget.classList.add('show')
+            } else {
+              // Show "in transit" status
+              this.statusIconTarget.textContent = '🚚'
+              this.statusTextTarget.textContent = '2 boxes are in transit to Manila'
+              this.statusDetailTarget.textContent = 'Estimated arrival: Aug 4, 2025 at 1:30 PM'
+              this.statusTarget.style.background = '#f0f8ff'
+              
+              // Hide payment section
+              this.paymentSectionTarget.classList.remove('show')
+            }
+          }
+        })
+      </script>
+    </head>
+    <body>
+      <div class="container" data-controller="pasabuy-tracker">
+        <div class="header">
+          <div class="tracking-id">Tracking ID</div>
+          <div class="title">202508041330</div>
+        </div>
+
+        <div class="status-section" data-pasabuy-tracker-target="status">
+          <div class="status-icon" data-pasabuy-tracker-target="statusIcon">🚚</div>
+          <div class="status-text" data-pasabuy-tracker-target="statusText">2 boxes are in transit to Manila</div>
+          <div class="status-detail" data-pasabuy-tracker-target="statusDetail">Estimated arrival: Aug 4, 2025 at 1:30 PM</div>
+        </div>
+
+        <div class="payment-section" data-pasabuy-tracker-target="paymentSection">
+          <div class="payment-title">Payment Required</div>
+          <div class="payment-amount">₱ 4,520.00</div>
+          
+          <div class="qr-grid">
+            <div class="qr-item">
+              <img src="/gcash-qr-xavi.png" alt="GCash QR" class="qr-image">
+              <div class="qr-label">GCash</div>
+            </div>
+            <div class="qr-item">
+              <img src="/maya-qr-xavi.png" alt="Maya QR" class="qr-image">
+              <div class="qr-label">Maya</div>
+            </div>
+            <div class="qr-item">
+              <img src="/bpi-qr-xavi.png" alt="BPI QR" class="qr-image">
+              <div class="qr-label">BPI</div>
+            </div>
+            <div class="qr-item">
+              <img src="/ub-qr-xavi.png" alt="UnionBank QR" class="qr-image">
+              <div class="qr-label">UnionBank</div>
+            </div>
+            <div class="qr-item">
+              <img src="/komo-qr-xavi.png" alt="Komo QR" class="qr-image">
+              <div class="qr-label">Komo</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+    </html>
+  `);
+});
+
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
 app.post('/line/webhook', line.middleware(config), (req, res) => {
