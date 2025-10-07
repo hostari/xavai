@@ -159,6 +159,35 @@
             color: #f4eee5;
         }
 
+        .ad-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .ad-slot {
+            display: block;
+            border: 2px dashed #46544f;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: #46544f;
+            background-color: rgba(70, 84, 79, 0.03);
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .ad-slot:hover {
+            background-color: rgba(70, 84, 79, 0.1);
+            border-color: #5a6860;
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
@@ -176,12 +205,22 @@
                 font-size: 2rem;
             }
 
+            .ad-container {
+                grid-template-columns: 1fr;
+            }
+
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
+            <div class="ad-container">
+                <a href="#" class="ad-slot">Buy this adspace #1 for 2000 THB</a>
+                <a href="#" class="ad-slot">Buy this adspace #2 for 2000 THB</a>
+                <a href="#" class="ad-slot">Buy this adspace #3 for 2000 THB</a>
+                <a href="#" class="ad-slot">Buy this adspace #4 for 2000 THB</a>
+            </div>
             <h2 class="wedding-title">our wedding</h2>
             <img src="/w/cover.jpg" alt="Xavi and Helen" class="cover-photo">
             <h1>XAVI & HELEN</h1>
