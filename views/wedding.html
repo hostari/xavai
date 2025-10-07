@@ -170,7 +170,11 @@
         }
 
         .ad-slot {
-            display: block;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px;
             border: 2px dashed #46544f;
             padding: 1.5rem;
             text-decoration: none;
@@ -221,12 +225,6 @@
 <body>
     <div class="container">
         <header>
-            <div class="ad-container">
-                <a href="https://brandofbrown.com/contact" class="ad-slot"><img src="/ads/brandofbrown.png" alt="brandofbrown"></a>
-                <a href="#" class="ad-slot">Buy this adspace #2 for 2000 THB</a>
-                <a href="#" class="ad-slot">Buy this adspace #3 for 2000 THB</a>
-                <a href="#" class="ad-slot">Buy this adspace #4 for 2000 THB</a>
-            </div>
             <h2 class="wedding-title">our wedding</h2>
             <img src="/w/cover.jpg" alt="Xavi and Helen" class="cover-photo">
             <h1>XAVI & HELEN</h1>
@@ -249,11 +247,18 @@
 
         <div class="wedding-details">
             <img src="/vows-chapelle.webp" alt="Vows Chapelle" style="width: 100%; max-width: 600px; height: 300px; object-fit: cover; border-radius: 10px; margin-bottom: 1.5rem;">
-            <img src="/wedding-color-theme.png" alt="Wedding Color Theme" style="width: 100%; max-width: 600px; border-radius: 10px; margin-bottom: 1.5rem;">
+            <img src="/wedding-color-theme.png" alt="Wedding Color Theme" style="width: 100%; max-width: 300px; border-radius: 10px; margin-bottom: 1.5rem;">
             <h3>Wedding Day</h3>
             <p><strong>January 17, 2026 | 17:00 </strong></p>
             <p><strong>Vows Chapelle</strong></p>
             <p class="address">Borommaratchachonnani Rd, Sala Thammasop, Thawi Watthana, Bangkok 10170</p>
+        </div>
+
+        <div class="ad-container">
+            <a href="https://brandofbrown.com/contact" class="ad-slot"><img src="/ads/brandofbrown.png" alt="brandofbrown"></a>
+            <a href="#" class="ad-slot">Buy this adspace #2 for 2000 THB</a>
+            <a href="#" class="ad-slot">Buy this adspace #3 for 2000 THB</a>
+            <a href="#" class="ad-slot">Buy this adspace #4 for 2000 THB</a>
         </div>
     </div>
 
