@@ -131,90 +131,41 @@
             text-decoration: underline;
         }
 
-        .intro {
-            text-align: center;
-            font-size: 1.2rem;
+        .story-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        .story-section {
             margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .story-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #46544f;
+            font-weight: normal;
+            line-height: 1.4;
+        }
+
+        .story-section img {
+            width: 100%;
             max-width: 600px;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            display: block;
             margin-left: auto;
             margin-right: auto;
         }
 
-        .region {
-            margin-bottom: 4rem;
+        .story-section p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #666;
+            margin-bottom: 1.5rem;
         }
-
-        .region h2 {
-            font-size: 2rem;
-            margin-bottom: 2rem;
-            text-align: center;
-            color: #46544f;
-        }
-
-        .airport-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .airport-card {
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            height: 200px;
-            border-radius: 10px;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            text-decoration: none;
-            color: white;
-            display: flex;
-            align-items: end;
-        }
-
-        .airport-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card-overlay {
-            width: 100%;
-            padding: 1.5rem;
-        }
-
-        .airport-name {
-            font-size: 1.3rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .airport-code {
-            font-size: 1rem;
-            opacity: 0.9;
-        }
-
-        /* Airport-specific backgrounds */
-        .jfk { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/jfk.jpg'); }
-        
-        .lga { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/lga.jpg'); }
-        
-        .sfo { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/sfo.jpg'); }
-        
-        
-        .lax { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/lax.jpg'); }
-        
-        .sea { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/sea.jpg'); }
-        
-        .yyz { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/yyz.jpg'); }
-        
-        .mnl { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/mnl.jpg'); }
-        
-        .hkg { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/hkg.jpg'); }
-        
-        .icn { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/icn.jpg'); }
-        
-        .pvg { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/pvg.jpg'); }
 
         @media (max-width: 768px) {
             .container {
@@ -229,12 +180,9 @@
                 font-size: 2.5rem;
             }
 
-            .airport-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .airport-card {
-                height: 150px;
+            .story-content {
+                padding: 2rem;
+                font-size: 1.1rem;
             }
         }
     </style>
@@ -261,75 +209,15 @@
             </ul>
         </nav>
 
-        <div class="region">
-            <h2>Asia</h2>
-            <div class="airport-grid">
-                <a href="/wedding/flights/mnl-choose" class="airport-card mnl">
-                    <div class="card-overlay">
-                        <div class="airport-name">Manila</div>
-                        <div class="airport-code">Flying from MNL?</div>
-                    </div>
-                </a>
-                <a href="/wedding/flights/hkg-choose" class="airport-card hkg">
-                    <div class="card-overlay">
-                        <div class="airport-name">Hong Kong</div>
-                        <div class="airport-code">Flying from HKG?</div>
-                    </div>
-                </a>
-                <a href="/wedding/flights/icn-choose" class="airport-card icn">
-                    <div class="card-overlay">
-                        <div class="airport-name">Seoul</div>
-                        <div class="airport-code">Flying from ICN?</div>
-                    </div>
-                </a>
-                <a href="/wedding/flights/pvg-choose" class="airport-card pvg">
-                    <div class="card-overlay">
-                        <div class="airport-name">Shanghai</div>
-                        <div class="airport-code">Flying from PVG?</div>
-                    </div>
-                </a>
+        <div class="story-content">
+            <div class="story-section">
+                <h2>Airport Information</h2>
+                <p>You can fly into BKK (Suvarnabhumi) Airport or DMK (Don Mueang) Airport. BKK airport is more convenient. Grab can be booked directly from the airport.</p>
             </div>
-        </div>
 
-        <div class="region">
-            <h2>North America</h2>
-            <div class="airport-grid">
-                <a href="/wedding/flights/jfk-bkk" class="airport-card jfk">
-                    <div class="card-overlay">
-                        <div class="airport-name">New York JFK</div>
-                        <div class="airport-code">Flying from JFK?</div>
-                    </div>
-                </a>
-                <a href="/wedding/flights/lga-bkk" class="airport-card lga">
-                    <div class="card-overlay">
-                        <div class="airport-name">New York LaGuardia</div>
-                        <div class="airport-code">Flying from LGA?</div>
-                    </div>
-                </a>
-                <a href="/wedding/flights/sfo-bkk" class="airport-card sfo">
-                    <div class="card-overlay">
-                        <div class="airport-name">San Francisco</div>
-                        <div class="airport-code">Flying from SFO?</div>
-                    </div>
-                </a>
-                <a href="/wedding/flights/lax-bkk" class="airport-card lax">
-                    <div class="card-overlay">
-                        <div class="airport-name">Los Angeles</div>
-                        <div class="airport-code">Flying from LAX?</div>
-                    </div>
-                </a>
-                <a href="/wedding/flights/sea-bkk" class="airport-card sea">
-                    <div class="card-overlay">
-                        <div class="airport-name">Seattle</div>
-                        <div class="airport-code">Flying from SEA?</div>
-                    </div>
-                </a>
-                <a href="/wedding/flights/yyz-bkk" class="airport-card yyz">
-                    <div class="card-overlay">
-                        <div class="airport-name">Toronto</div>
-                        <div class="airport-code">Flying from YYZ?</div>
-                    </div>
-                </a>
+            <div class="story-section">
+                <h2>Nearby Hotels</h2>
+                <p>You can stay in any hotel in Bangkok, and book Grab around 2 HOURS IN ADVANCE to Vows Chapelle. It will be very traffic to move from the center of Bangkok to the destination. We recommend that you stay in a hotel close to ICONSIAM as hotels closer to the venue are not so good.</p>
             </div>
         </div>
 
