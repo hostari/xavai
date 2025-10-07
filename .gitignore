@@ -1,3 +1,4 @@
 node_modules/
 .aider*
 .DS_Store
+/public/w/originals
