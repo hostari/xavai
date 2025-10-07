@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xavi Ablaza & Helen Chongviriyaphan's Wedding - Photos</title>
+    <link rel="icon" type="image/x-icon" href="/favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="/favicon/site.webmanifest">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -132,6 +137,7 @@
             cursor: pointer;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            aspect-ratio: 3 / 4;
         }
 
         .photo-item:hover {
@@ -141,8 +147,9 @@
 
         .photo-item img {
             width: 100%;
-            height: auto;
+            height: 100%;
             display: block;
+            object-fit: cover;
             transition: transform 0.3s ease;
         }
 
@@ -265,6 +272,18 @@
             }
         }
 
+        .cover-photo {
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+
+        .cover-photo img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
@@ -305,10 +324,18 @@
                 right: 15px;
                 font-size: 2rem;
             }
+
+            .cover-photo {
+                margin-bottom: 1rem;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="cover-photo">
+        <img src="/w/W346.jpg" alt="Xavi & Helen Wedding Photo">
+    </div>
+
     <div class="container">
         <header>
             <h2 class="wedding-title">our wedding</h2>
@@ -351,7 +378,7 @@
     <script>
         // Wedding photos array
         const photos = [
-            'W346.jpg', 'W121.jpg', 'W196.jpg', 'W215.jpg', 'W236.jpg', 'W293.jpg', 'W335.jpg',
+            'W121.jpg', 'W196.jpg', 'W215.jpg', 'W236.jpg', 'W293.jpg', 'W335.jpg',
             'W3.jpg', 'W12.jpg', 'W20.jpg', 'W46.jpg', 'W85.jpg',
             'W107.jpg', 'W131.jpg', 'W150.jpg', 'W153.jpg',
             'W162.jpg', 'W164.jpg', 'W181.jpg',
