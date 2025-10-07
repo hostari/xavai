@@ -507,27 +507,27 @@ app.get('/pasabuy/202508041330', (_req, res) => {
 
         <div class="payment-section" data-pasabuy-tracker-target="paymentSection">
           <div class="payment-title">Payment Required</div>
-          <div class="payment-amount">₱ 1,800.00</div>
+          <div class="payment-amount">₱ 4,520.00</div>
           
           <div class="qr-grid">
             <div class="qr-item">
-              <img src="/gcash-qr-xavi-1800.png" alt="GCash QR" class="qr-image">
+              <img src="/gcash-qr-xavi.png" alt="GCash QR" class="qr-image">
               <div class="qr-label">GCash</div>
             </div>
             <div class="qr-item">
-              <img src="/maya-qr-xavi-1800.png" alt="Maya QR" class="qr-image">
+              <img src="/maya-qr-xavi.png" alt="Maya QR" class="qr-image">
               <div class="qr-label">Maya</div>
             </div>
             <div class="qr-item">
-              <img src="/bpi-qr-xavi-1800.png" alt="BPI QR" class="qr-image">
+              <img src="/bpi-qr-xavi.png" alt="BPI QR" class="qr-image">
               <div class="qr-label">BPI</div>
             </div>
             <div class="qr-item">
-              <img src="/ub-qr-xavi-1800.png" alt="UnionBank QR" class="qr-image">
+              <img src="/ub-qr-xavi.png" alt="UnionBank QR" class="qr-image">
               <div class="qr-label">UnionBank</div>
             </div>
             <div class="qr-item">
-              <img src="/komo-qr-xavi-1800.png" alt="Komo QR" class="qr-image">
+              <img src="/komo-qr-xavi.png" alt="Komo QR" class="qr-image">
               <div class="qr-label">Komo</div>
             </div>
           </div>
