@@ -9,6 +9,9 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
     <link rel="manifest" href="/favicon/site.webmanifest">
+    <meta property="og:image" content="/w/cover-og.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -77,6 +80,14 @@
         header {
             text-align: center;
             padding-bottom: 1rem;
+        }
+
+        .cover-photo-header {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 1.5rem auto;
+            border-radius: 10px;
+            display: block;
         }
 
         h1 {
@@ -272,18 +283,6 @@
             }
         }
 
-        .cover-photo {
-            width: 100%;
-            margin-bottom: 2rem;
-        }
-
-        .cover-photo img {
-            width: 100%;
-            height: auto;
-            display: block;
-            object-fit: cover;
-        }
-
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
@@ -324,21 +323,14 @@
                 right: 15px;
                 font-size: 2rem;
             }
-
-            .cover-photo {
-                margin-bottom: 1rem;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="cover-photo">
-        <img src="/w/W346.jpg" alt="Xavi & Helen Wedding Photo">
-    </div>
-
     <div class="container">
         <header>
             <h2 class="wedding-title">our wedding</h2>
+            <img src="/w/cover.jpg" alt="Xavi and Helen" class="cover-photo-header">
             <h1>XAVI & HELEN</h1>
             <p class="subtitle">BANGKOK, THAILAND • JANUARY 17, 2026</p>
             <p id="countdown-timer">162 DAYS TO GO!</p>
@@ -378,13 +370,13 @@
     <script>
         // Wedding photos array
         const photos = [
-            'W121.jpg', 'W196.jpg', 'W215.jpg', 'W236.jpg', 'W293.jpg', 'W335.jpg',
+            'W121.jpg', 'W196.jpg', 'W215.jpg', 'W236.jpg', 'W293.jpg', 'W353.jpg',
             'W3.jpg', 'W12.jpg', 'W20.jpg', 'W46.jpg', 'W85.jpg',
             'W107.jpg', 'W131.jpg', 'W150.jpg', 'W153.jpg',
             'W162.jpg', 'W164.jpg', 'W181.jpg',
             'W228.jpg', 'W249.jpg', 'W262.jpg', 'W280.jpg',
             'W300.jpg', 'W319.jpg', 'W321.jpg',
-            'W344.jpg', 'W353.jpg', 'W368.jpg', 'W370.jpg'
+            'W344.jpg', 'W368.jpg', 'W370.jpg'
         ];
 
         let currentImageIndex = 0;
