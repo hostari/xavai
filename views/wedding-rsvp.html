@@ -260,6 +260,45 @@
             margin-top: 2rem;
         }
 
+        .ad-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 2rem;
+        }
+
+        .ad-slot {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: #46544f;
+            background-color: rgba(70, 84, 79, 0.03);
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .ad-slot img {
+            width: 100%;
+            height: auto;
+            border-radius: 3px;
+        }
+
+        .ad-slot:hover {
+            background-color: rgba(70, 84, 79, 0.1);
+            border-color: #5a6860;
+            transform: translateY(-2px);
+        }
+
         .required {
             color: #c44569;
         }
@@ -461,6 +500,10 @@
             .header-with-flowers {
                 gap: 0.5rem;
             }
+
+            .ad-container {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 480px) {
@@ -600,6 +643,11 @@
 
         <div class="note">
             <p>Please RSVP by <strong>December 15, 2025</strong>. We can't wait to celebrate with you!</p>
+        </div>
+
+        <div class="ad-container">
+            <a href="https://brandofbrown.com/contact" class="ad-slot"><img src="/ads/brandofbrown.png" alt="brandofbrown"></a>
+            <a href="https://www.instagram.com/joobjib" class="ad-slot"><img src="/ads/joojib.png" alt="joojib"></a>
         </div>
     </div>
 
