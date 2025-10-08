@@ -412,14 +412,12 @@
         updateCountdown();
         setInterval(updateCountdown, 3600000); // Update every hour
 
-        // Show mobile ad banners after page loads and 10 seconds pass
+        // Show mobile ad banners immediately after page loads
         window.addEventListener('load', function() {
-            setTimeout(function() {
-                const adBanners = document.getElementById('mobileAdBanners');
-                if (adBanners) {
-                    adBanners.classList.add('visible');
-                }
-            }, 10000); // 10 seconds
+            const adBanners = document.getElementById('mobileAdBanners');
+            if (adBanners) {
+                adBanners.classList.add('visible');
+            }
         });
     </script>
 </body>
