@@ -374,6 +374,7 @@
         <div class="ad-container">
             <a href="https://brandofbrown.com/contact" class="ad-slot"><img src="/ads/brandofbrown.png" alt="brandofbrown"></a>
             <a href="https://www.instagram.com/joobjib" class="ad-slot"><img src="/ads/joojib.png" alt="joojib"></a>
+            <a href="https://www.instagram.com/joobjib" class="ad-slot"><img src="/ads/joojib2.jpg" alt="joojib"></a>
         </div>
     </div>
 
@@ -395,14 +396,12 @@
         updateCountdown();
         setInterval(updateCountdown, 3600000); // Update every hour
 
-        // Show mobile ad banners after page loads and 10 seconds pass
+        // Show mobile ad banners immediately after page loads
         window.addEventListener('load', function() {
-            setTimeout(function() {
-                const adBanners = document.getElementById('mobileAdBanners');
-                if (adBanners) {
-                    adBanners.classList.add('visible');
-                }
-            }, 10000); // 10 seconds
+            const adBanners = document.getElementById('mobileAdBanners');
+            if (adBanners) {
+                adBanners.classList.add('visible');
+            }
         });
     </script>
 </body>
