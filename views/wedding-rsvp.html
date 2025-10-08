@@ -506,10 +506,15 @@
                     <p class="step-subtitle">If you're responding for you and a guest (or your family), you'll be able to RSVP for your entire group.</p>
                     
                     <div class="form-group">
-                        <label for="guest-name">Full Name <span class="required">*</span></label>
-                        <input type="text" id="guest-name" name="guest-name" required>
+                        <label for="guest-first-name">First Name <span class="required">*</span></label>
+                        <input type="text" id="guest-first-name" name="guest-first-name" required>
                     </div>
-                    
+
+                    <div class="form-group">
+                        <label for="guest-last-name">Last Name <span class="required">*</span></label>
+                        <input type="text" id="guest-last-name" name="guest-last-name" required>
+                    </div>
+
                     <button type="button" class="btn" onclick="findInvitation()">Find Your Invitation</button>
                 </div>
             </div>
@@ -605,37 +610,7 @@
         let currentStep = 1;
         let currentParty = null;
         let rsvpData = {};
-        
-        // Mock guest database with party codes
-        const guestList = {
-            "PARTY001": [
-                { name: "John Smith", id: "guest001" },
-                { name: "Jane Smith", id: "guest002" },
-                { name: "Emily Smith", id: "guest003" }
-            ],
-            "PARTY002": [
-                { name: "Michael Johnson", id: "guest004" },
-                { name: "Sarah Johnson", id: "guest005" }
-            ],
-            "PARTY003": [
-                { name: "David Chen", id: "guest006" },
-                { name: "Lisa Chen", id: "guest007" },
-                { name: "Tommy Chen", id: "guest008" },
-                { name: "Sophie Chen", id: "guest009" }
-            ],
-            "PARTY004": [
-                { name: "Robert Williams", id: "guest010" }
-            ],
-            "PARTY005": [
-                { name: "Maria Garcia", id: "guest011" },
-                { name: "Carlos Garcia", id: "guest012" }
-            ],
-            "PARTY006": [
-                { name: "Xavi Ablaza", id: "guest013" },
-                { name: "Helen Chongviriyaphan", id: "guest014" }
-            ]
-        };
-        
+
         // Initialize form
         updateStepIndicator(1);
         
@@ -665,48 +640,50 @@
             updateStepIndicator(step);
         }
         
-        function findInvitation() {
-            const guestName = document.getElementById('guest-name').value.trim();
-            
-            if (!guestName) {
-                alert('Please enter your full name.');
+        async function findInvitation() {
+            const firstName = document.getElementById('guest-first-name').value.trim();
+            const lastName = document.getElementById('guest-last-name').value.trim();
+
+            if (!firstName || !lastName) {
+                alert('Please enter your first name and last name.');
                 return;
             }
-            
-            // Find guest in party list
-            let foundParty = null;
-            let foundGuest = null;
-            
-            for (const [partyCode, guests] of Object.entries(guestList)) {
-                const guest = guests.find(g => 
-                    g.name.toLowerCase().includes(guestName.toLowerCase()) ||
-                    guestName.toLowerCase().includes(g.name.toLowerCase())
-                );
-                
-                if (guest) {
-                    foundParty = partyCode;
-                    foundGuest = guest;
-                    break;
+
+            try {
+                // Call backend API to search for guest
+                const response = await fetch(`/wedding/rsvp/search?firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(lastName)}`);
+
+                if (!response.ok) {
+                    throw new Error('Failed to search for guest');
                 }
-            }
-            
-            if (foundGuest) {
-                currentParty = foundParty;
-                rsvpData.searchedName = guestName;
-                rsvpData.foundGuest = foundGuest;
-                rsvpData.party = guestList[foundParty];
-                
-                // Display found guest
-                document.getElementById('found-guest-name').textContent = foundGuest.name;
-                
-                showStep(2);
-            } else {
-                alert('Guest not found. Please check the spelling of your name or contact the couple.');
+
+                const data = await response.json();
+
+                if (data.found && data.guest) {
+                    // Store guest data
+                    rsvpData.searchedFirstName = firstName;
+                    rsvpData.searchedLastName = lastName;
+                    rsvpData.foundGuest = data.guest;
+                    rsvpData.party = data.party;
+                    rsvpData.rowIndex = data.rowIndex; // Store row index for updating later
+
+                    // Display found guest
+                    const fullName = `${data.guest.firstName} ${data.guest.lastName}`;
+                    document.getElementById('found-guest-name').textContent = fullName;
+
+                    showStep(2);
+                } else {
+                    alert('Guest not found. Please check the spelling of your name or contact the couple.');
+                }
+            } catch (error) {
+                console.error('Error searching for guest:', error);
+                alert('An error occurred while searching for your invitation. Please try again.');
             }
         }
         
         function searchAgain() {
-            document.getElementById('guest-name').value = '';
+            document.getElementById('guest-first-name').value = '';
+            document.getElementById('guest-last-name').value = '';
             showStep(1);
         }
         
@@ -733,20 +710,23 @@
         function generateAttendanceForm() {
             const container = document.getElementById('party-attendance');
             container.innerHTML = '';
-            
-            rsvpData.party.forEach(guest => {
+
+            rsvpData.party.forEach((guest, index) => {
                 const memberDiv = document.createElement('div');
                 memberDiv.className = 'party-member';
+                const guestId = guest.id || `guest-${index}`;
+                const displayName = guest.nickname || `${guest.firstName} ${guest.lastName}`;
+
                 memberDiv.innerHTML = `
-                    <div class="member-name">${guest.name}</div>
+                    <div class="member-name">${displayName}</div>
                     <div class="attendance-options">
                         <div class="radio-option">
-                            <input type="radio" id="attending-${guest.id}-yes" name="attendance-${guest.id}" value="accepted">
-                            <label for="attending-${guest.id}-yes">Accepted</label>
+                            <input type="radio" id="attending-${guestId}-yes" name="attendance-${guestId}" value="accepted" checked>
+                            <label for="attending-${guestId}-yes">Accepted</label>
                         </div>
                         <div class="radio-option">
-                            <input type="radio" id="attending-${guest.id}-no" name="attendance-${guest.id}" value="declined">
-                            <label for="attending-${guest.id}-no">Decline</label>
+                            <input type="radio" id="attending-${guestId}-no" name="attendance-${guestId}" value="declined">
+                            <label for="attending-${guestId}-no">Decline</label>
                         </div>
                     </div>
                 `;
@@ -757,40 +737,47 @@
         function collectAttendanceData() {
             rsvpData.attendance = {};
             let hasResponse = false;
-            
-            rsvpData.party.forEach(guest => {
-                const attendanceChoice = document.querySelector(`input[name="attendance-${guest.id}"]:checked`);
+
+            rsvpData.party.forEach((guest, index) => {
+                const guestId = guest.id || `guest-${index}`;
+                const attendanceChoice = document.querySelector(`input[name="attendance-${guestId}"]:checked`);
                 if (attendanceChoice) {
-                    rsvpData.attendance[guest.id] = {
-                        name: guest.name,
-                        status: attendanceChoice.value
+                    const displayName = guest.nickname || `${guest.firstName} ${guest.lastName}`;
+                    rsvpData.attendance[guestId] = {
+                        firstName: guest.firstName,
+                        lastName: guest.lastName,
+                        nickname: guest.nickname,
+                        displayName: displayName,
+                        status: attendanceChoice.value,
+                        rowIndex: guest.rowIndex
                     };
                     hasResponse = true;
                 }
             });
-            
+
             if (!hasResponse) {
                 alert('Please select attendance for at least one party member.');
                 return false;
             }
-            
+
             return true;
         }
         
         function generateDietaryForm() {
             const container = document.getElementById('dietary-questions');
             container.innerHTML = '';
-            
+
             // Only show dietary questions for guests who are attending
             Object.values(rsvpData.attendance)
                 .filter(guest => guest.status === 'accepted')
                 .forEach(guest => {
                     const dietaryDiv = document.createElement('div');
                     dietaryDiv.className = 'dietary-item';
+                    const sanitizedName = guest.displayName.replace(/\s+/g, '-');
                     dietaryDiv.innerHTML = `
-                        <div class="dietary-label">${guest.name}:</div>
-                        <textarea id="dietary-${guest.name.replace(/\s+/g, '-')}" 
-                                  name="dietary-${guest.name.replace(/\s+/g, '-')}" 
+                        <div class="dietary-label">${guest.displayName}:</div>
+                        <textarea id="dietary-${sanitizedName}"
+                                  name="dietary-${sanitizedName}"
                                   placeholder="Enter any food allergies or dietary restrictions..."
                                   rows="3"></textarea>
                     `;
@@ -800,49 +787,50 @@
         
         function collectDietaryData() {
             rsvpData.dietary = {};
-            
+
             Object.values(rsvpData.attendance)
                 .filter(guest => guest.status === 'accepted')
                 .forEach(guest => {
-                    const dietaryField = document.getElementById(`dietary-${guest.name.replace(/\s+/g, '-')}`);
+                    const sanitizedName = guest.displayName.replace(/\s+/g, '-');
+                    const dietaryField = document.getElementById(`dietary-${sanitizedName}`);
                     if (dietaryField) {
-                        rsvpData.dietary[guest.name] = dietaryField.value.trim();
+                        rsvpData.dietary[guest.displayName] = dietaryField.value.trim();
                     }
                 });
         }
         
         function generateSummary() {
             const container = document.getElementById('rsvp-summary');
-            
+
             const attending = Object.values(rsvpData.attendance).filter(g => g.status === 'accepted');
             const declining = Object.values(rsvpData.attendance).filter(g => g.status === 'declined');
-            
+
             let summaryHTML = '<div class="summary-section">';
             summaryHTML += '<div class="summary-title">Event Details:</div>';
             summaryHTML += 'Saturday, January 17, 2026 at Vows Chapelle (Cocktail attire)';
             summaryHTML += '</div>';
-            
+
             if (attending.length > 0) {
                 summaryHTML += '<div class="summary-section">';
                 summaryHTML += '<div class="summary-title">Attending:</div>';
                 attending.forEach(guest => {
-                    summaryHTML += `${guest.name}<br>`;
-                    if (rsvpData.dietary[guest.name]) {
-                        summaryHTML += `<small>Dietary: ${rsvpData.dietary[guest.name]}</small><br>`;
+                    summaryHTML += `${guest.displayName}<br>`;
+                    if (rsvpData.dietary[guest.displayName]) {
+                        summaryHTML += `<small>Dietary: ${rsvpData.dietary[guest.displayName]}</small><br>`;
                     }
                 });
                 summaryHTML += '</div>';
             }
-            
+
             if (declining.length > 0) {
                 summaryHTML += '<div class="summary-section">';
                 summaryHTML += '<div class="summary-title">Not Attending:</div>';
                 declining.forEach(guest => {
-                    summaryHTML += `${guest.name}<br>`;
+                    summaryHTML += `${guest.displayName}<br>`;
                 });
                 summaryHTML += '</div>';
             }
-            
+
             container.innerHTML = summaryHTML;
         }
         

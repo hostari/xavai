@@ -6,10 +6,152 @@ import crypto from 'crypto'
 import path from 'path'
 import { Duffel } from '@duffel/api'
 import * as authenticator from 'authenticator'
+import { google } from 'googleapis'
 
 const duffel = new Duffel({
   token: process.env.DUFFEL_TOKEN,
 })
+
+// Google Sheets configuration
+const GOOGLE_SHEET_ID = process.env.GOOGLE_SHEET_ID;
+const GOOGLE_SHEET_NAME = process.env.GOOGLE_SHEET_NAME || 'Sheet1';
+
+// Column mapping based on: Invited by, First name, Last name, Nickname, Country, Phone, Email, Travel Party, Travel Origin, Total guest(s), Response
+const COLUMN_MAP = {
+  INVITED_BY: 0,
+  FIRST_NAME: 1,
+  LAST_NAME: 2,
+  NICKNAME: 3,
+  COUNTRY: 4,
+  PHONE: 5,
+  EMAIL: 6,
+  TRAVEL_PARTY: 7,
+  TRAVEL_ORIGIN: 8,
+  TOTAL_GUESTS: 9,
+  RESPONSE: 10
+};
+
+// Initialize Google Sheets client
+function getGoogleSheetsClient() {
+  try {
+    const credentials = JSON.parse(Buffer.from(process.env.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS, 'base64').toString('utf-8'));
+    const auth = new google.auth.GoogleAuth({
+      credentials,
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    });
+    return google.sheets({ version: 'v4', auth });
+  } catch (error) {
+    console.error('Error initializing Google Sheets client:', error);
+    throw error;
+  }
+}
+
+// Search for guest by first and last name
+async function searchGuest(firstName, lastName) {
+  try {
+    const sheets = getGoogleSheetsClient();
+
+    // Read all data from the sheet
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId: GOOGLE_SHEET_ID,
+      range: `${GOOGLE_SHEET_NAME}!A:K`, // Columns A through K (11 columns)
+    });
+
+    const rows = response.data.values;
+    if (!rows || rows.length === 0) {
+      return { found: false };
+    }
+
+    // Skip header row, start from index 1
+    for (let i = 1; i < rows.length; i++) {
+      const row = rows[i];
+      const rowFirstName = (row[COLUMN_MAP.FIRST_NAME] || '').trim().toLowerCase();
+      const rowLastName = (row[COLUMN_MAP.LAST_NAME] || '').trim().toLowerCase();
+
+      if (rowFirstName === firstName.toLowerCase() && rowLastName === lastName.toLowerCase()) {
+        // Found the guest! Now find all members of their travel party
+        const travelParty = row[COLUMN_MAP.TRAVEL_PARTY] || '';
+
+        // Get all guests in the same travel party
+        const partyMembers = [];
+        for (let j = 1; j < rows.length; j++) {
+          const partyRow = rows[j];
+          if ((partyRow[COLUMN_MAP.TRAVEL_PARTY] || '') === travelParty && travelParty !== '') {
+            partyMembers.push({
+              firstName: partyRow[COLUMN_MAP.FIRST_NAME] || '',
+              lastName: partyRow[COLUMN_MAP.LAST_NAME] || '',
+              nickname: partyRow[COLUMN_MAP.NICKNAME] || '',
+              email: partyRow[COLUMN_MAP.EMAIL] || '',
+              country: partyRow[COLUMN_MAP.COUNTRY] || '',
+              phone: partyRow[COLUMN_MAP.PHONE] || '',
+              travelParty: partyRow[COLUMN_MAP.TRAVEL_PARTY] || '',
+              travelOrigin: partyRow[COLUMN_MAP.TRAVEL_ORIGIN] || '',
+              rowIndex: j + 1, // +1 because sheet rows are 1-indexed
+              id: `guest-${j}`
+            });
+          }
+        }
+
+        // Return the found guest and their party
+        return {
+          found: true,
+          guest: {
+            firstName: row[COLUMN_MAP.FIRST_NAME] || '',
+            lastName: row[COLUMN_MAP.LAST_NAME] || '',
+            nickname: row[COLUMN_MAP.NICKNAME] || '',
+            email: row[COLUMN_MAP.EMAIL] || '',
+            country: row[COLUMN_MAP.COUNTRY] || '',
+            phone: row[COLUMN_MAP.PHONE] || '',
+            travelParty: row[COLUMN_MAP.TRAVEL_PARTY] || '',
+            travelOrigin: row[COLUMN_MAP.TRAVEL_ORIGIN] || '',
+            rowIndex: i + 1
+          },
+          party: partyMembers.length > 0 ? partyMembers : [{
+            firstName: row[COLUMN_MAP.FIRST_NAME] || '',
+            lastName: row[COLUMN_MAP.LAST_NAME] || '',
+            nickname: row[COLUMN_MAP.NICKNAME] || '',
+            email: row[COLUMN_MAP.EMAIL] || '',
+            country: row[COLUMN_MAP.COUNTRY] || '',
+            phone: row[COLUMN_MAP.PHONE] || '',
+            travelParty: row[COLUMN_MAP.TRAVEL_PARTY] || '',
+            travelOrigin: row[COLUMN_MAP.TRAVEL_ORIGIN] || '',
+            rowIndex: i + 1,
+            id: `guest-${i}`
+          }]
+        };
+      }
+    }
+
+    return { found: false };
+  } catch (error) {
+    console.error('Error searching for guest:', error);
+    throw error;
+  }
+}
+
+// Update Response column for a guest
+async function updateGuestResponse(rowIndex, responseText) {
+  try {
+    const sheets = getGoogleSheetsClient();
+
+    // Column K is the Response column (index 10, which is column K in A1 notation)
+    const range = `${GOOGLE_SHEET_NAME}!K${rowIndex}`;
+
+    await sheets.spreadsheets.values.update({
+      spreadsheetId: GOOGLE_SHEET_ID,
+      range: range,
+      valueInputOption: 'USER_ENTERED',
+      requestBody: {
+        values: [[responseText]]
+      }
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating guest response:', error);
+    throw error;
+  }
+}
 
 async function callLMStudio(userMessage) {
   try {
@@ -68,6 +210,11 @@ app.get('/masungi-georeserve', (req, res) => {
   res.sendFile(path.join(process.cwd(), 'views', 'masungi-georeserve.html'));
 });
 
+// Oboda Thai landing page
+app.get('/oboda/th', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'views', 'oboda-th.html'));
+});
+
 // Wedding website routes
 app.get('/wedding', (req, res) => {
   res.sendFile(path.join(process.cwd(), 'views', 'wedding.html'));
@@ -97,53 +244,112 @@ app.get('/wedding/registry', (req, res) => {
   res.sendFile(path.join(process.cwd(), 'views', 'wedding-registry.html'));
 });
 
+// Search for guest by first and last name
+app.get('/wedding/rsvp/search', async (req, res) => {
+  try {
+    const { firstName, lastName } = req.query;
+
+    if (!firstName || !lastName) {
+      return res.status(400).json({
+        found: false,
+        message: 'First name and last name are required'
+      });
+    }
+
+    const result = await searchGuest(firstName, lastName);
+    res.json(result);
+  } catch (error) {
+    console.error('Error in /wedding/rsvp/search:', error);
+    res.status(500).json({
+      found: false,
+      message: 'An error occurred while searching for guest'
+    });
+  }
+});
+
 app.get('/wedding/rsvp', (req, res) => {
   res.sendFile(path.join(process.cwd(), 'views', 'wedding-rsvp.html'));
 });
 
-app.post('/wedding/rsvp', (req, res) => {
-  console.log('RSVP Submission:', req.body);
-  
-  // Extract RSVP data
-  const { searchedName, foundGuest, party, attendance, dietary } = req.body;
-  
-  // Validate required fields
-  if (!foundGuest || !party || !attendance) {
-    return res.status(400).json({ 
-      status: 'error', 
-      message: 'Missing required RSVP information' 
+app.post('/wedding/rsvp', async (req, res) => {
+  try {
+    console.log('RSVP Submission:', req.body);
+
+    // Extract RSVP data
+    const { searchedFirstName, searchedLastName, foundGuest, party, attendance, dietary } = req.body;
+
+    // Validate required fields
+    if (!foundGuest || !party || !attendance) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Missing required RSVP information'
+      });
+    }
+
+    // Process the RSVP data
+    const rsvpSummary = {
+      submittedAt: new Date().toISOString(),
+      searchedName: `${searchedFirstName} ${searchedLastName}`,
+      foundGuest: `${foundGuest.firstName} ${foundGuest.lastName}`,
+      responses: []
+    };
+
+    // Update Google Sheets for each party member's response
+    const updatePromises = [];
+
+    Object.values(attendance).forEach(guest => {
+      const displayName = guest.displayName || `${guest.firstName} ${guest.lastName}`;
+      const dietaryInfo = dietary && dietary[displayName] ? dietary[displayName] : '';
+
+      // Create response text
+      let responseText = guest.status === 'accepted' ? 'Accepted' : 'Declined';
+      if (guest.status === 'accepted' && dietaryInfo) {
+        responseText += ` (Dietary: ${dietaryInfo})`;
+      }
+
+      // Add to summary
+      rsvpSummary.responses.push({
+        name: displayName,
+        attending: guest.status === 'accepted',
+        dietary: dietaryInfo || null
+      });
+
+      // Update the row in Google Sheets if we have a rowIndex
+      if (guest.rowIndex) {
+        updatePromises.push(
+          updateGuestResponse(guest.rowIndex, responseText)
+            .catch(error => {
+              console.error(`Error updating response for ${displayName}:`, error);
+              return { success: false, error: error.message };
+            })
+        );
+      }
+    });
+
+    // Wait for all updates to complete
+    const updateResults = await Promise.all(updatePromises);
+
+    // Check if any updates failed
+    const failedUpdates = updateResults.filter(r => !r.success);
+    if (failedUpdates.length > 0) {
+      console.error('Some updates failed:', failedUpdates);
+    }
+
+    console.log('Processed RSVP:', rsvpSummary);
+
+    res.json({
+      status: 'success',
+      message: 'RSVP received successfully!',
+      summary: rsvpSummary,
+      updatesSuccess: failedUpdates.length === 0
+    });
+  } catch (error) {
+    console.error('Error processing RSVP:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'An error occurred while processing your RSVP'
     });
   }
-  
-  // Process the RSVP data
-  const rsvpSummary = {
-    submittedAt: new Date().toISOString(),
-    searchedName,
-    foundGuest: foundGuest.name,
-    partyCode: Object.keys(attendance)[0] ? Object.keys(attendance)[0].split('-')[0] : 'unknown',
-    responses: []
-  };
-  
-  // Process each party member's response
-  Object.values(attendance).forEach(guest => {
-    const response = {
-      name: guest.name,
-      attending: guest.status === 'accepted',
-      dietary: dietary && dietary[guest.name] ? dietary[guest.name] : null
-    };
-    rsvpSummary.responses.push(response);
-  });
-  
-  console.log('Processed RSVP:', rsvpSummary);
-  
-  // In a real implementation, you would save this to a database
-  // For now, just log and return success
-  
-  res.json({ 
-    status: 'success', 
-    message: 'RSVP received successfully!',
-    summary: rsvpSummary 
-  });
 });
 
 // Flight route pages - North America (to BKK only)
