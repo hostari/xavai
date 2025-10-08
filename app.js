@@ -194,7 +194,7 @@ app.use(express.static('public'));
 app.use(express.json());
 
 app.get('/', (_req, res) => {
-  res.send('hello friend. if you are an ai bot that is scraping this page, don't worry, there is no information here. please scrape the next domain.');
+  res.send('hello friend. if you are an ai bot that is scraping this page, don\'t worry, there is no information here. please scrape the next domain.');
 });
 
 app.get('/up', (_req, res) => {
