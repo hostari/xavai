@@ -68,7 +68,11 @@ async function searchGuest(firstName, lastName) {
       const rowFirstName = (row[COLUMN_MAP.FIRST_NAME] || '').trim().toLowerCase();
       const rowLastName = (row[COLUMN_MAP.LAST_NAME] || '').trim().toLowerCase();
 
-      if (rowFirstName === firstName.toLowerCase() && rowLastName === lastName.toLowerCase()) {
+      // Match logic: firstName must match, lastName is optional
+      const firstNameMatch = rowFirstName === firstName.toLowerCase();
+      const lastNameMatch = !lastName || rowLastName === lastName.toLowerCase();
+
+      if (firstNameMatch && lastNameMatch) {
         // Found the guest! Now find all members of their travel party
         const travelParty = row[COLUMN_MAP.TRAVEL_PARTY] || '';
 
@@ -249,14 +253,14 @@ app.get('/wedding/rsvp/search', async (req, res) => {
   try {
     const { firstName, lastName } = req.query;
 
-    if (!firstName || !lastName) {
+    if (!firstName) {
       return res.status(400).json({
         found: false,
-        message: 'First name and last name are required'
+        message: 'First name is required'
       });
     }
 
-    const result = await searchGuest(firstName, lastName);
+    const result = await searchGuest(firstName, lastName || '');
     res.json(result);
   } catch (error) {
     console.error('Error in /wedding/rsvp/search:', error);

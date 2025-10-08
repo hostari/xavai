@@ -235,6 +235,16 @@
             background-color: #5a6860;
         }
 
+        .btn:disabled {
+            background-color: #999;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn:disabled:hover {
+            background-color: #999;
+        }
+
         .note {
             background: rgba(70, 84, 79, 0.1);
             padding: 1.5rem;
@@ -511,8 +521,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="guest-last-name">Last Name <span class="required">*</span></label>
-                        <input type="text" id="guest-last-name" name="guest-last-name" required>
+                        <label for="guest-last-name">Last Name</label>
+                        <input type="text" id="guest-last-name" name="guest-last-name">
                     </div>
 
                     <button type="button" class="btn" onclick="findInvitation()">Find Your Invitation</button>
@@ -644,14 +654,18 @@
             const firstName = document.getElementById('guest-first-name').value.trim();
             const lastName = document.getElementById('guest-last-name').value.trim();
 
-            if (!firstName || !lastName) {
-                alert('Please enter your first name and last name.');
+            if (!firstName) {
+                alert('Please enter your first name.');
                 return;
             }
 
             try {
                 // Call backend API to search for guest
-                const response = await fetch(`/wedding/rsvp/search?firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(lastName)}`);
+                let url = `/wedding/rsvp/search?firstName=${encodeURIComponent(firstName)}`;
+                if (lastName) {
+                    url += `&lastName=${encodeURIComponent(lastName)}`;
+                }
+                const response = await fetch(url);
 
                 if (!response.ok) {
                     throw new Error('Failed to search for guest');
@@ -668,7 +682,9 @@
                     rsvpData.rowIndex = data.rowIndex; // Store row index for updating later
 
                     // Display found guest
-                    const fullName = `${data.guest.firstName} ${data.guest.lastName}`;
+                    const fullName = data.guest.lastName
+                        ? `${data.guest.firstName} ${data.guest.lastName}`
+                        : data.guest.firstName;
                     document.getElementById('found-guest-name').textContent = fullName;
 
                     showStep(2);
@@ -835,6 +851,11 @@
         }
         
         async function submitRSVP() {
+            const submitButton = event.target;
+
+            // Disable button immediately
+            submitButton.disabled = true;
+
             try {
                 const response = await fetch('/wedding/rsvp', {
                     method: 'POST',
@@ -843,18 +864,23 @@
                     },
                     body: JSON.stringify(rsvpData)
                 });
-                
+
                 const result = await response.json();
-                
+
                 if (response.ok) {
                     alert('Thank you! Your RSVP has been submitted successfully.');
-                    // Reset form or redirect as needed
+                    // Update button text to show success
+                    submitButton.textContent = 'RSVP SENT!';
                 } else {
                     alert('Error submitting RSVP. Please try again.');
+                    // Re-enable button on error
+                    submitButton.disabled = false;
                 }
             } catch (error) {
                 console.error('Error:', error);
                 alert('Error submitting RSVP. Please try again.');
+                // Re-enable button on error
+                submitButton.disabled = false;
             }
         }
     </script>
