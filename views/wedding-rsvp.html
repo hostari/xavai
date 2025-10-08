@@ -131,6 +131,27 @@
             letter-spacing: 1px;
         }
 
+        .header-with-flowers {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            min-width: 0;
+        }
+
+        .flower-left, .flower-right {
+            flex: 0 0 150px;
+            width: 150px;
+            height: auto;
+            flex-shrink: 0;
+        }
+
+        .wedding-title-container {
+            flex: 1;
+            min-width: 0;
+        }
+
         .rsvp-form {
             background: rgba(70, 84, 79, 0.05);
             padding: 3rem;
@@ -416,13 +437,39 @@
                 flex-direction: column;
                 gap: 1rem;
             }
+
+            .flower-left, .flower-right {
+                flex: 0 0 80px;
+                width: 80px;
+            }
+
+            .header-with-flowers {
+                gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .flower-left, .flower-right {
+                flex: 0 0 50px;
+                width: 50px;
+            }
+
+            .header-with-flowers {
+                gap: 0.25rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h2 class="wedding-title">our wedding</h2>
+            <div class="header-with-flowers">
+                <img src="/flower-left-min.png" alt="Flower decoration" class="flower-left">
+                <div class="wedding-title-container">
+                    <h2 class="wedding-title">our wedding</h2>
+                </div>
+                <img src="/flower-right-min.png" alt="Flower decoration" class="flower-right">
+            </div>
             <img src="/w/cover.jpg" alt="Xavi and Helen" class="cover-photo">
             <h1>XAVI & HELEN</h1>
             <p class="subtitle">BANGKOK, THAILAND • JANUARY 17, 2026</p>

@@ -130,6 +130,27 @@
             letter-spacing: 1px;
         }
 
+        .header-with-flowers {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            min-width: 0;
+        }
+
+        .flower-left, .flower-right {
+            flex: 0 0 150px;
+            width: 150px;
+            height: auto;
+            flex-shrink: 0;
+        }
+
+        .wedding-title-container {
+            flex: 1;
+            min-width: 0;
+        }
+
         .photos-content {
             padding: 2rem 0;
         }
@@ -276,6 +297,55 @@
             letter-spacing: 1px;
         }
 
+        .ad-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .ad-slot {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px;
+            border: 2px dashed #46544f;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: #46544f;
+            background-color: rgba(70, 84, 79, 0.03);
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .ad-slot img {
+            width: 100%;
+            height: auto;
+            border-radius: 3px;
+        }
+
+        .ad-slot:hover {
+            background-color: rgba(70, 84, 79, 0.1);
+            border-color: #5a6860;
+            transform: translateY(-2px);
+        }
+
+        .mobile-ad-container {
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+
+        .mobile-ad-container.visible {
+            opacity: 1;
+        }
+
         @media (max-width: 1024px) {
             .photo-gallery {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -294,6 +364,54 @@
 
             .wedding-title {
                 font-size: 2.5rem;
+            }
+
+            .flower-left, .flower-right {
+                flex: 0 0 80px;
+                width: 80px;
+            }
+
+            .header-with-flowers {
+                gap: 0.5rem;
+            }
+
+            .ad-container {
+                grid-template-columns: 1fr;
+            }
+
+            .mobile-ad-container {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+                margin-top: 0;
+            }
+
+            .mobile-ad-banner:first-child {
+                margin-top: 0;
+            }
+
+            .mobile-ad-banner {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                max-height: 80px;
+                min-height: 60px;
+                border: 2px dashed #46544f;
+                padding: 0.75rem;
+                text-decoration: none;
+                color: #46544f;
+                background-color: rgba(70, 84, 79, 0.03);
+                border-radius: 5px;
+                transition: all 0.3s ease;
+                font-size: 0.85rem;
+                text-align: center;
+            }
+
+            .mobile-ad-banner:hover {
+                background-color: rgba(70, 84, 79, 0.1);
+                border-color: #5a6860;
+                transform: translateY(-2px);
             }
 
             .photo-gallery {
@@ -324,12 +442,33 @@
                 font-size: 2rem;
             }
         }
+
+        @media (max-width: 480px) {
+            .flower-left, .flower-right {
+                flex: 0 0 50px;
+                width: 50px;
+            }
+
+            .header-with-flowers {
+                gap: 0.25rem;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h2 class="wedding-title">our wedding</h2>
+            <div class="mobile-ad-container" id="mobileAdBanners">
+                <a href="https://buy.stripe.com/bJe28t3JH7ri34D27u1sQ02" class="mobile-ad-banner">Buy this adspace #5 for 3500 THB <small>&nbsp;(Redirects to Stripe)</small></a>
+                <a href="https://buy.stripe.com/5kQbJ39417ricFdh2o1sQ03" class="mobile-ad-banner">Buy this adspace #6 for 3500 THB <small>&nbsp;(Redirects to Stripe)</small></a>
+            </div>
+            <div class="header-with-flowers">
+                <img src="/flower-left-min.png" alt="Flower decoration" class="flower-left">
+                <div class="wedding-title-container">
+                    <h2 class="wedding-title">our wedding</h2>
+                </div>
+                <img src="/flower-right-min.png" alt="Flower decoration" class="flower-right">
+            </div>
             <img src="/w/cover.jpg" alt="Xavi and Helen" class="cover-photo-header">
             <h1>XAVI & HELEN</h1>
             <p class="subtitle">BANGKOK, THAILAND • JANUARY 17, 2026</p>
@@ -348,6 +487,13 @@
                 <li><a href="/wedding/rsvp">RSVP</a></li>
             </ul>
         </nav>
+
+        <div class="ad-container">
+            <a href="https://brandofbrown.com/contact" class="ad-slot"><img src="/ads/brandofbrown.png" alt="brandofbrown"></a>
+            <a href="#" class="ad-slot">Buy this adspace #2 for 2000 THB</a>
+            <a href="https://buy.stripe.com/4gMcN794126Y7kT9zW1sQ00" class="ad-slot">Buy this adspace #3 for 2000 THB<br><small>(Redirects to Stripe)</small></a>
+            <a href="https://buy.stripe.com/aFa9AV3JH4f6fRpdQc1sQ01" class="ad-slot">Buy this adspace #4 for 2000 THB<br><small>(Redirects to Stripe)</small></a>
+        </div>
 
         <div class="photos-content">
             <div class="photo-gallery" id="photoGallery">
@@ -505,6 +651,16 @@
         loadGallery();
         updateCountdown();
         setInterval(updateCountdown, 3600000); // Update every hour
+
+        // Show mobile ad banners after page loads and 10 seconds pass
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const adBanners = document.getElementById('mobileAdBanners');
+                if (adBanners) {
+                    adBanners.classList.add('visible');
+                }
+            }, 10000); // 10 seconds
+        });
     </script>
 </body>
 </html>
