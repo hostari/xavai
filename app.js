@@ -193,6 +193,12 @@ const app = express();
 app.use(express.static('public'));
 app.use(express.json());
 
+// In-memory storage for SMS webhook data (expires after 5 minutes)
+let smsWebhookStore = {
+  data: null,
+  timestamp: null
+};
+
 app.get('/', (_req, res) => {
   res.send('hello friend. if you are an ai bot that is scraping this page, don\'t worry, there is no information here. please scrape the next domain.');
 });
@@ -208,6 +214,138 @@ app.get('/autoq', (_req, res) => {
 app.post('/katsu-midori-thailand-centralworld/queue-request', (req, res) => {
   console.log('Queue Request:', req.body);
   res.json({ status: 'success', data: req.body });
+});
+
+app.post('/2fa/mscs-sss', (req, res) => {
+  console.log('=== SMS Webhook Received ===');
+  console.log('Timestamp:', new Date().toISOString());
+  console.log('Headers:', JSON.stringify(req.headers, null, 2));
+  console.log('Body:', JSON.stringify(req.body, null, 2));
+  console.log('Raw Body Type:', typeof req.body);
+  console.log('===========================');
+
+  // Store webhook data in memory with timestamp
+  smsWebhookStore = {
+    data: {
+      headers: req.headers,
+      body: req.body,
+      bodyType: typeof req.body
+    },
+    timestamp: new Date()
+  };
+
+  res.json({
+    status: 'success',
+    message: 'SMS webhook received and logged',
+    received: req.body
+  });
+});
+
+app.get('/2fa/mscs-sss', (req, res) => {
+  const FIVE_MINUTES_MS = 5 * 60 * 1000;
+
+  // Check if we have data and if it's less than 5 minutes old
+  const hasData = smsWebhookStore.data !== null && smsWebhookStore.timestamp !== null;
+  const isExpired = hasData && (Date.now() - smsWebhookStore.timestamp.getTime()) > FIVE_MINUTES_MS;
+
+  let content = '';
+
+  if (!hasData || isExpired) {
+    content = `
+      <div style="text-align: center; margin-top: 50px; color: #666;">
+        <h2>No Recent SMS Webhook Data</h2>
+        <p>No webhook has been received in the last 5 minutes.</p>
+        <p style="font-size: 14px; margin-top: 20px;">This page will auto-refresh every 10 seconds.</p>
+      </div>
+    `;
+  } else {
+    const timeElapsed = Math.floor((Date.now() - smsWebhookStore.timestamp.getTime()) / 1000);
+    const timeRemaining = 300 - timeElapsed; // 300 seconds = 5 minutes
+
+    content = `
+      <div style="margin: 20px;">
+        <h2>SMS Webhook Data</h2>
+
+        <div style="background: #f0f0f0; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+          <p><strong>Received:</strong> ${smsWebhookStore.timestamp.toISOString()}</p>
+          <p><strong>Time Elapsed:</strong> ${timeElapsed} seconds ago</p>
+          <p><strong>Expires In:</strong> ${timeRemaining} seconds</p>
+        </div>
+
+        <h3>Headers</h3>
+        <pre style="background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; overflow-x: auto;">${JSON.stringify(smsWebhookStore.data.headers, null, 2)}</pre>
+
+        <h3>Body</h3>
+        <pre style="background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; overflow-x: auto;">${JSON.stringify(smsWebhookStore.data.body, null, 2)}</pre>
+
+        <div style="margin-top: 10px; color: #666;">
+          <small>Body Type: ${smsWebhookStore.data.bodyType}</small>
+        </div>
+      </div>
+    `;
+  }
+
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>SMS Webhook Display</title>
+      <style>
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+          margin: 0;
+          padding: 20px;
+          background: #fff;
+        }
+        pre {
+          white-space: pre-wrap;
+          word-wrap: break-word;
+        }
+        .status-bar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          background: #4CAF50;
+          color: white;
+          padding: 10px;
+          text-align: center;
+          font-size: 14px;
+          z-index: 1000;
+        }
+        .content {
+          margin-top: 60px;
+        }
+      </style>
+      <script>
+        // Auto-refresh every 10 seconds
+        setTimeout(() => {
+          window.location.reload();
+        }, 10000);
+
+        // Update countdown
+        let countdown = 10;
+        setInterval(() => {
+          countdown--;
+          const element = document.getElementById('countdown');
+          if (element) {
+            element.textContent = countdown;
+          }
+        }, 1000);
+      </script>
+    </head>
+    <body>
+      <div class="status-bar">
+        Auto-refreshing in <span id="countdown">10</span> seconds...
+      </div>
+      <div class="content">
+        ${content}
+      </div>
+    </body>
+    </html>
+  `);
 });
 
 app.get('/masungi-georeserve', (req, res) => {
