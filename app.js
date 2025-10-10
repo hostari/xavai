@@ -253,8 +253,8 @@ app.get('/2fa/mscs-sss', (req, res) => {
   if (!hasData || isExpired) {
     content = `
       <div style="text-align: center; margin-top: 50px; color: #666;">
-        <h2>No Recent SMS Webhook Data</h2>
-        <p>No webhook has been received in the last 5 minutes.</p>
+        <h2>No Recent OTP Code</h2>
+        <p>Please login to MSCS SSS to receive the verification code.</p>
         <p style="font-size: 14px; margin-top: 20px;">This page will auto-refresh every 10 seconds.</p>
       </div>
     `;
@@ -262,9 +262,21 @@ app.get('/2fa/mscs-sss', (req, res) => {
     const timeElapsed = Math.floor((Date.now() - smsWebhookStore.timestamp.getTime()) / 1000);
     const timeRemaining = 300 - timeElapsed; // 300 seconds = 5 minutes
 
+    // Extract 6-digit OTP code from the text
+    let otpCode = 'Code not found';
+    let showCopyButton = false;
+
+    if (smsWebhookStore.data.body && smsWebhookStore.data.body.text) {
+      const match = smsWebhookStore.data.body.text.match(/\b\d{6}\b/);
+      if (match) {
+        otpCode = match[0];
+        showCopyButton = true;
+      }
+    }
+
     content = `
-      <div style="margin: 20px;">
-        <h2>SMS Webhook Data</h2>
+      <div data-controller="token-refresher" style="margin: 20px;">
+        <h1>MSCS SSS OTP Code</h1>
 
         <div style="background: #f0f0f0; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
           <p><strong>Received:</strong> ${smsWebhookStore.timestamp.toISOString()}</p>
@@ -272,15 +284,32 @@ app.get('/2fa/mscs-sss', (req, res) => {
           <p><strong>Expires In:</strong> ${timeRemaining} seconds</p>
         </div>
 
-        <h3>Headers</h3>
-        <pre style="background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; overflow-x: auto;">${JSON.stringify(smsWebhookStore.data.headers, null, 2)}</pre>
-
-        <h3>Body</h3>
-        <pre style="background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; overflow-x: auto;">${JSON.stringify(smsWebhookStore.data.body, null, 2)}</pre>
-
-        <div style="margin-top: 10px; color: #666;">
-          <small>Body Type: ${smsWebhookStore.data.bodyType}</small>
+        <div class="container">
+          <div data-token-refresher-target="display" style="font-size: 48px; font-family: monospace;">
+            ${otpCode}
+          </div>
+          ${showCopyButton ? `
+          <button data-action="token-refresher#copy">
+            Copy
+          </button>
+          <span data-token-refresher-target="notification" class="notification">Copied!</span>
+          ` : ''}
         </div>
+
+        <details style="margin-top: 30px;">
+          <summary style="cursor: pointer; font-weight: bold;">Show Raw Data</summary>
+          <div style="margin-top: 20px;">
+            <h3>Headers</h3>
+            <pre style="background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; overflow-x: auto;">${JSON.stringify(smsWebhookStore.data.headers, null, 2)}</pre>
+
+            <h3>Body</h3>
+            <pre style="background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; overflow-x: auto;">${JSON.stringify(smsWebhookStore.data.body, null, 2)}</pre>
+
+            <div style="margin-top: 10px; color: #666;">
+              <small>Body Type: ${smsWebhookStore.data.bodyType}</small>
+            </div>
+          </div>
+        </details>
       </div>
     `;
   }
@@ -291,7 +320,7 @@ app.get('/2fa/mscs-sss', (req, res) => {
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>SMS Webhook Display</title>
+      <title>MSCS SSS OTP</title>
       <style>
         body {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -318,8 +347,37 @@ app.get('/2fa/mscs-sss', (req, res) => {
         .content {
           margin-top: 60px;
         }
+        .notification {
+          color: green;
+          margin-left: 10px;
+          opacity: 0;
+          transition: opacity 0.3s;
+        }
+        .notification.show {
+          opacity: 1;
+        }
+        .container {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
       </style>
-      <script>
+      <script type="module">
+        import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js"
+        window.Stimulus = Application.start()
+
+        Stimulus.register("token-refresher", class extends Controller {
+          static targets = [ "display", "notification" ]
+
+          async copy() {
+            await navigator.clipboard.writeText(this.displayTarget.textContent.trim())
+            this.notificationTarget.classList.add('show')
+            setTimeout(() => {
+              this.notificationTarget.classList.remove('show')
+            }, 2000)
+          }
+        })
+
         // Auto-refresh every 10 seconds
         setTimeout(() => {
           window.location.reload();
