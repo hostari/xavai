@@ -551,6 +551,10 @@ app.get('/2fa/mscs-phic/value', (req, res) => {
   res.send(authenticator.generateToken(process.env.MSCS_PHIC_2FA_KEY))
 });
 
+app.get('/2fa/hpi-phic/value', (req, res) => {
+  res.send(authenticator.generateToken(process.env.HPI_PHIC_2FA_KEY))
+});
+
 app.get('/2fa/mscs-phic', (_req, res) => {
   const initialToken = authenticator.generateToken(process.env.MSCS_PHIC_2FA_KEY);
   res.send(`
@@ -627,6 +631,98 @@ app.get('/2fa/mscs-phic', (_req, res) => {
     <body>
       <div data-controller="token-refresher">
         <h1>MSCS PHIC 2FA Token</h1>
+        <div class="clock" data-token-refresher-target="clock"></div>
+        <div class="container">
+          <div data-token-refresher-target="display" style="font-size: 48px; font-family: monospace;">
+            ${initialToken}
+          </div>
+          <button data-action="token-refresher#copy">
+            Copy
+          </button>
+          <span data-token-refresher-target="notification" class="notification">Copied!</span>
+        </div>
+      </div>
+    </body>
+    </html>
+  `);
+});
+
+app.get('/2fa/hpi-phic', (_req, res) => {
+  const initialToken = authenticator.generateToken(process.env.HPI_PHIC_2FA_KEY);
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>HPI PHIC 2FA Token</title>
+      <style>
+        .notification {
+          color: green;
+          margin-left: 10px;
+          opacity: 0;
+          transition: opacity 0.3s;
+        }
+        .notification.show {
+          opacity: 1;
+        }
+        .container {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .clock {
+          font-family: monospace;
+          font-size: 24px;
+          margin-bottom: 20px;
+        }
+      </style>
+      <script type="module">
+        import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js"
+        window.Stimulus = Application.start()
+
+        Stimulus.register("token-refresher", class extends Controller {
+          static targets = [ "display", "clock", "notification" ]
+
+          connect() {
+            this.updateClock()
+            this.clockTimer = setInterval(() => this.updateClock(), 1000)
+          }
+
+          disconnect() {
+            if (this.clockTimer) {
+              clearInterval(this.clockTimer)
+            }
+          }
+
+          async updateClock() {
+            const now = new Date()
+            const seconds = now.getSeconds()
+            this.clockTarget.textContent = now.toLocaleTimeString()
+
+            if (seconds === 0 || seconds === 30) {
+              await this.refreshToken()
+            }
+          }
+
+          async refreshToken() {
+            const response = await fetch('/2fa/hpi-phic/value')
+            const token = await response.text()
+            this.displayTarget.textContent = token
+          }
+
+          async copy() {
+            await navigator.clipboard.writeText(this.displayTarget.textContent)
+            this.notificationTarget.classList.add('show')
+            setTimeout(() => {
+              this.notificationTarget.classList.remove('show')
+            }, 2000)
+          }
+        })
+      </script>
+    </head>
+    <body>
+      <div data-controller="token-refresher">
+        <h1>HPI PHIC 2FA Token</h1>
         <div class="clock" data-token-refresher-target="clock"></div>
         <div class="container">
           <div data-token-refresher-target="display" style="font-size: 48px; font-family: monospace;">
