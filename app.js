@@ -551,7 +551,7 @@ app.get("/2fa/ubp", (req, res) => {
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>MSCS SSS OTP</title>
+      <title>MSCS/HPI UBP OTP</title>
       <style>
         body {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
