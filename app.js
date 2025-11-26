@@ -503,7 +503,7 @@ app.get("/2fa/ubp", (req, res) => {
 
     content = `
       <div data-controller="token-refresher" style="margin: 20px;">
-        <h1>MSCS SSS OTP Code</h1>
+        <h1>MSCS/HPI UBP OTP Code</h1>
 
         <div style="background: #f0f0f0; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
           <p><strong>Received:</strong> ${smsWebhookStore.timestamp.toISOString()}</p>
