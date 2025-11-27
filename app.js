@@ -1061,7 +1061,7 @@ app.get("/2fa/hpi-sss", (_req, res) => {
     </head>
     <body>
       <div data-controller="token-refresher">
-        <h1>HPI PHIC 2FA Token</h1>
+        <h1>HPI SSS 2FA Token</h1>
         <div class="clock" data-token-refresher-target="clock"></div>
         <div class="container">
           <div data-token-refresher-target="display" style="font-size: 48px; font-family: monospace;">
