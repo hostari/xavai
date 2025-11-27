@@ -1044,7 +1044,7 @@ app.get("/2fa/hpi-sss", (_req, res) => {
           }
 
           async refreshToken() {
-            const response = await fetch('/2fa/hpi-phic/value')
+            const response = await fetch('/2fa/hpi-sss/value')
             const token = await response.text()
             this.displayTarget.textContent = token
           }
