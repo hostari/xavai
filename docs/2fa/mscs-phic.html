@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MSCS PHIC 2FA Token</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #fff;
+    }
+    .notification {
+      color: green;
+      margin-left: 10px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .notification.show {
+      opacity: 1;
+    }
+    .container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .clock {
+      font-family: monospace;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .token-display {
+      font-size: 48px;
+      font-family: monospace;
+      text-align: center;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .warning {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 5px;
+      padding: 15px;
+      margin: 20px auto;
+      max-width: 600px;
+      text-align: center;
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 30px;
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>MSCS PHIC 2FA Token</h1>
+    
+    <div class="warning" id="warning">
+      ⚠️ Please set your 2FA secret key below before using this page
+    </div>
+    
+    <div style="text-align: center; margin-bottom: 20px;">
+      <label for="secretKey" style="display: block; margin-bottom: 10px;">
+        2FA Secret Key (will be stored in browser):
+      </label>
+      <input 
+        type="text" 
+        id="secretKey" 
+        placeholder="Enter your TOTP secret key"
+        style="padding: 10px; width: 300px; font-family: monospace;"
+      />
+      <button onclick="saveSecret()" style="margin-left: 10px;">Save Key</button>
+    </div>
+    
+    <div class="clock" id="clock" style="text-align: center;"></div>
+    
+    <div class="container">
+      <div class="token-display" id="token">------</div>
+      <button onclick="copyToken()">Copy</button>
+      <span class="notification" id="notification">Copied!</span>
+    </div>
+    
+    <a href="../index.html" class="back-link">← Back to All 2FA Pages</a>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/otpauth@9.1.4/dist/otpauth.umd.min.js"></script>
+  <script>
+    // ⚠️ SECURITY WARNING: Secret key is embedded in this file
+    // Replace this placeholder value with your actual TOTP secret key
+    // Anyone with access to this file can see this key
+    const PRELOADED_SECRET = 'BWJRI3LNC76DTK2JBG3RYSW3TFSHQFSD';
+    
+    const STORAGE_KEY = 'mscs_phic_secret';
+    let currentToken = '------';
+    let totp = null;
+
+    // Load saved secret from localStorage
+    function loadSecret() {
+      // First check localStorage
+      let saved = localStorage.getItem(STORAGE_KEY);
+      
+      // If not in localStorage, use preloaded secret
+      if (!saved && PRELOADED_SECRET !== 'YOUR_MSCS_PHIC_SECRET_KEY_HERE') {
+        saved = PRELOADED_SECRET;
+        // Optionally save to localStorage for future use
+        localStorage.setItem(STORAGE_KEY, saved);
+      }
+      
+      if (saved) {
+        document.getElementById('secretKey').value = saved;
+        initializeTOTP(saved);
+        document.getElementById('warning').style.display = 'none';
+        return true;
+      }
+      return false;
+    }
+
+    function saveSecret() {
+      const secret = document.getElementById('secretKey').value.trim();
+      if (!secret) {
+        alert('Please enter a secret key');
+        return;
+      }
+      localStorage.setItem(STORAGE_KEY, secret);
+      initializeTOTP(secret);
+      document.getElementById('warning').style.display = 'none';
+      alert('Secret key saved!');
+    }
+
+    function initializeTOTP(secret) {
+      try {
+        totp = new OTPAuth.TOTP({
+          issuer: 'MSCS',
+          label: 'PHIC',
+          algorithm: 'SHA1',
+          digits: 6,
+          period: 30,
+          secret: secret
+        });
+        updateToken();
+      } catch (error) {
+        console.error('Error initializing TOTP:', error);
+        alert('Invalid secret key format');
+      }
+    }
+
+    function updateClock() {
+      const now = new Date();
+      const seconds = now.getSeconds();
+      document.getElementById('clock').textContent = now.toLocaleTimeString();
+
+      if (seconds === 0 || seconds === 30) {
+        updateToken();
+      }
+    }
+
+    function updateToken() {
+      if (totp) {
+        currentToken = totp.generate();
+        document.getElementById('token').textContent = currentToken;
+      }
+    }
+
+    async function copyToken() {
+      if (currentToken === '------') {
+        alert('Please set your secret key first');
+        return;
+      }
+      await navigator.clipboard.writeText(currentToken);
+      const notification = document.getElementById('notification');
+      notification.classList.add('show');
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 2000);
+    }
+
+    // Initialize on page load
+    loadSecret();
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
+</body>
+</html>
