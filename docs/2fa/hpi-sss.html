@@ -77,23 +77,6 @@
   <div id="app">
     <h1>HPI SSS 2FA Token</h1>
     
-    <div class="warning" id="warning">
-      ⚠️ Please set your 2FA secret key below before using this page
-    </div>
-    
-    <div style="text-align: center; margin-bottom: 20px;">
-      <label for="secretKey" style="display: block; margin-bottom: 10px;">
-        2FA Secret Key (will be stored in browser):
-      </label>
-      <input 
-        type="text" 
-        id="secretKey" 
-        placeholder="Enter your TOTP secret key"
-        style="padding: 10px; width: 300px; font-family: monospace;"
-      />
-      <button onclick="saveSecret()" style="margin-left: 10px;">Save Key</button>
-    </div>
-    
     <div class="clock" id="clock" style="text-align: center;"></div>
     
     <div class="container">
@@ -129,24 +112,10 @@
       }
       
       if (saved) {
-        document.getElementById('secretKey').value = saved;
         initializeTOTP(saved);
-        document.getElementById('warning').style.display = 'none';
         return true;
       }
       return false;
-    }
-
-    function saveSecret() {
-      const secret = document.getElementById('secretKey').value.trim();
-      if (!secret) {
-        alert('Please enter a secret key');
-        return;
-      }
-      localStorage.setItem(STORAGE_KEY, secret);
-      initializeTOTP(secret);
-      document.getElementById('warning').style.display = 'none';
-      alert('Secret key saved!');
     }
 
     function initializeTOTP(secret) {

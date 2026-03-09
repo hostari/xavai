@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>2FA Tokens - Backup Dashboard</title>
+  <title>HPI/MSCS 2FA Token Dashboard</title>
   <style>
     * {
       margin: 0;
@@ -253,40 +253,12 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>🔐 2FA Token Dashboard</h1>
+      <h1>🔐 HPI/MSCS 2FA Token Dashboard</h1>
       <div class="clock" id="mainClock"></div>
       <div class="countdown" id="countdown"></div>
     </div>
 
-    <div id="warningSection" class="warning" style="display: none;">
-      <h2>⚠️ Setup Required</h2>
-      <p>Please enter your 2FA secret keys below to generate tokens</p>
-    </div>
 
-    <div class="secret-input-section">
-      <h3>📝 Configure Secret Keys</h3>
-      <p style="margin-bottom: 20px; color: #666;">
-        Enter your TOTP secret keys below. They will be saved securely in your browser's local storage.
-      </p>
-      
-      <div class="secret-row">
-        <label for="mscsPhicKey">MSCS PHIC:</label>
-        <input type="text" id="mscsPhicKey" placeholder="Enter MSCS PHIC secret key">
-        <button onclick="saveSecret('mscs_phic', 'mscsPhicKey')">Save</button>
-      </div>
-
-      <div class="secret-row">
-        <label for="hpiPhicKey">HPI PHIC:</label>
-        <input type="text" id="hpiPhicKey" placeholder="Enter HPI PHIC secret key">
-        <button onclick="saveSecret('hpi_phic', 'hpiPhicKey')">Save</button>
-      </div>
-
-      <div class="secret-row">
-        <label for="hpiSssKey">HPI SSS:</label>
-        <input type="text" id="hpiSssKey" placeholder="Enter HPI SSS secret key">
-        <button onclick="saveSecret('hpi_sss', 'hpiSssKey')">Save</button>
-      </div>
-    </div>
 
     <div class="tokens-grid">
       <!-- MSCS PHIC Card -->
@@ -395,30 +367,9 @@
         }
         
         if (saved) {
-          document.getElementById(token.inputId).value = saved;
           initializeTOTP(key, saved);
-        } else {
-          anyMissing = true;
         }
       });
-
-      if (anyMissing) {
-        document.getElementById('warningSection').style.display = 'block';
-      }
-    }
-
-    function saveSecret(key, inputId) {
-      const secret = document.getElementById(inputId).value.trim();
-      if (!secret) {
-        alert('Please enter a secret key');
-        return;
-      }
-      
-      const token = tokens[key];
-      localStorage.setItem(token.storage, secret);
-      initializeTOTP(key, secret);
-      document.getElementById('warningSection').style.display = 'none';
-      alert('Secret key saved!');
     }
 
     function initializeTOTP(key, secret) {
